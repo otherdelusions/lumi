@@ -3,7 +3,7 @@
   flake.homelabServices.avahi = {
     description = "zeroconf and mDNS";
     iconUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Avahi-logo.svg/330px-Avahi-logo.svg.png";
-    path = "modules/homelab/services/avahi.nix";
+    path = "aspects/homelab/services/avahi.nix";
   };
 
   den.aspects.homelab.services.avahi = {

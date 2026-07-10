@@ -3,7 +3,7 @@
   flake.homelabServices.suwayomi = {
     description = "\"manga\" reader";
     iconUrl = "https://raw.githubusercontent.com/Suwayomi/Suwayomi-Server/refs/heads/master/server/src/main/resources/icon/faviconlogo.png";
-    path = "modules/homelab/services/suwayomi.nix";
+    path = "aspects/homelab/services/suwayomi.nix";
   };
 
   den.aspects.homelab.services.suwayomi = {

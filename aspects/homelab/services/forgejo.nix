@@ -3,7 +3,7 @@
   flake.homelabServices.forgejo = {
     description = "self-hosted git forge";
     iconUrl = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/forgejo.png";
-    path = "modules/homelab/services/forgejo.nix";
+    path = "aspects/homelab/services/forgejo.nix";
   };
 
   den.aspects.homelab.services.forgejo = {

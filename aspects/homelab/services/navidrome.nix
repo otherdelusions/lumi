@@ -3,7 +3,7 @@
   flake.homelabServices.navidrome = {
     description = "music streaming server";
     iconUrl = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/navidrome.png";
-    path = "modules/homelab/services/navidrome.nix";
+    path = "aspects/homelab/services/navidrome.nix";
   };
 
   den.aspects.homelab.services.navidrome = {

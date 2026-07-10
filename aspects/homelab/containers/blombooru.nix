@@ -3,7 +3,7 @@
   flake.homelabContainers.blombooru = {
     description = "single-user taggable image board";
     iconUrl = "https://raw.githubusercontent.com/mrblomblo/blombooru/refs/heads/main/frontend/static/images/pwa-icon.png";
-    path = "modules/homelab/containers/blombooru.nix";
+    path = "aspects/homelab/containers/blombooru.nix";
   };
 
   den.aspects.homelab.containers.blombooru = {

@@ -3,7 +3,7 @@
   flake.homelabServices.samba = {
     description = "SMB file sharing protocol";
     iconUrl = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/samba-server.png";
-    path = "modules/homelab/services/samba.nix";
+    path = "aspects/homelab/services/samba.nix";
   };
 
   den.aspects.homelab.services.samba = {
