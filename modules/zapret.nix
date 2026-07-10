@@ -82,7 +82,7 @@
           params = strategies.${cfg.strategy}.filters;
         };
 
-        networking.hostFiles = lib.optionals cfg.addHosts [ "${flowsealData}/.service/hosts" ];
+        networking.hostFiles = lib.optional cfg.addHosts "${flowsealData}/.service/hosts";
       };
     };
 }
