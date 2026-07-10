@@ -1,0 +1,21 @@
+name: build
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: accept-flake-config = true
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: cachix/cachix-action@v17
+        with:
+          name: snezhka
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+      - run: |
+          nix build --print-build-logs \
+            .#nixosConfigurations.ash.config.system.build.toplevel \
+            .#nixosConfigurations.ember.config.system.build.toplevel

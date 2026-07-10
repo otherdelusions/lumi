@@ -1,0 +1,16 @@
+keys:
+  - &editors
+    - &delusion age1kv9lld6yrtu3udyu083amzvd6zh64nxdg3a4m64nxxdfxc58ggdsgu5wxe
+  - &owners
+    - &ember age14980r3x57qm9054r6rjzz0matdznr6r0z94gg4hzgshll0w0tyusfp62fd
+creation_rules:
+  - path_regex: secrets/users/delusion\.yaml$
+    key_groups:
+      - age:
+          - *delusion
+          - *ember
+  - path_regex: secrets/hosts/ember\.yaml$
+    key_groups:
+      - age:
+          - *delusion
+          - *ember
