@@ -20,6 +20,8 @@
           package = pkgs.niri-unstable;
         };
 
+        services.gnome.gcr-ssh-agent.enable = false;
+
         environment.systemPackages = lib.optionals config.programs.niri.enable [
           pkgs.xwayland-satellite
           pkgs.wl-clipboard

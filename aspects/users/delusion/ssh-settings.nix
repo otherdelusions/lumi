@@ -11,8 +11,7 @@
       { osConfig, ... }:
       {
         programs.ssh.settings = {
-          github = {
-            HostName = "github.com";
+          "github.com" = {
             User = "git";
             IdentityFile = osConfig.sops.secrets.github_ssh_key.path;
             IdentitiesOnly = true;

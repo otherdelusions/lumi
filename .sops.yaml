@@ -1,6 +1,6 @@
 keys:
   - &editors
-    - &delusion age1kv9lld6yrtu3udyu083amzvd6zh64nxdg3a4m64nxxdfxc58ggdsgu5wxe
+    - &delusion age1v6qp7k5navkacvy02pwk8jwwvqc4yqhwu5zm86tat4t54qlcxv7qd35hm9
   - &owners
     - &ember age14980r3x57qm9054r6rjzz0matdznr6r0z94gg4hzgshll0w0tyusfp62fd
 creation_rules:
