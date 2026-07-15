@@ -36,7 +36,7 @@
           alias = {
             l = "log --oneline --graph";
             cm = "commit -m";
-            lock = "!git add flake.lock && git chore flake \"update flake.lock\"";
+            lock = "!git restore --staged . && git add flake.lock && git chore flake \"update flake.lock\"";
             chore = "!f() { git commit -m \"chore\${1:+($1)}: $2\" \${3:+-m \"$3\"}; }; f";
             docs = "!f() { git commit -m \"docs\${1:+($1)}: $2\" \${3:+-m \"$3\"}; }; f";
             feat = "!f() { git commit -m \"feat\${1:+($1)}: $2\" \${3:+-m \"$3\"}; }; f";
