@@ -5,6 +5,11 @@
   den.aspects.theming.stylix = {
     homeManager = {
       stylix.enable = true;
+
+      stylix.targets = {
+        starship.enable = false;
+        fish.enable = false;
+      };
     };
 
     nixos =
@@ -25,6 +30,10 @@
 
             inherit image;
             polarity = "dark";
+
+            targets = {
+              fish.enable = false;
+            };
 
             base16Scheme = {
               base00 = "151616";

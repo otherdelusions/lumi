@@ -13,20 +13,20 @@
             $hostname$directory$git_branch$git_status$fill$nix_shell
             $character'';
 
-          character.format = "[ ](base04)";
+          character.format = "[ ](white)";
 
           fill.symbol = " ";
 
           directory = {
-            format = "[  $path ](fg:base00 bg:base14)";
+            format = "[  $path ](fg:black bg:green)";
             truncation_symbol = "…/";
           };
 
-          git_branch.format = "[  $branch ](fg:base00 bg:base16)";
+          git_branch.format = "[  $branch ](fg:black bg:blue)";
 
           nix_shell = {
             heuristic = true;
-            format = "[  $name ](fg:base01 bg:base15)";
+            format = "[  $name ](fg:black bg:cyan)";
           };
 
           git_status = {
@@ -35,19 +35,12 @@
             staged = "+\$\{count\}";
             modified = "!\$\{count\}";
             stashed = "\\$\$\{count\}";
-            format = "[$staged$modified$untracked$stashed ](fg:base00 bg:base16)";
+            format = "[$staged$modified$untracked$stashed ](fg:black bg:blue)";
           };
 
           hostname = {
             ssh_only = true;
-            format = "[ SSH ](fg:base07 bold bg:base09)";
-          };
-
-          username = {
-            show_always = true;
-            style_user = "base17";
-            style_root = "base09";
-            format = "[$user]($style)";
+            format = "[ SSH ](fg:bright-white bold bg:red)";
           };
         };
       };
