@@ -2,7 +2,6 @@
 {
   den.aspects.interloper = {
     includes = with den.aspects; [
-      common
       server.zfs
     ];
 

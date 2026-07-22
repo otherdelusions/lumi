@@ -11,8 +11,10 @@
             experimental-features = [
               "nix-command"
               "flakes"
+              "pipe-operators"
             ];
 
+            accept-flake-config = true;
             auto-optimise-store = true;
             warn-dirty = false;
             connect-timeout = lib.mkDefault 5;

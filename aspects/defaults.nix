@@ -5,7 +5,8 @@
       den.batteries.hostname
       den.batteries.inputs'
       den.batteries.self'
-    ];
+    ]
+    ++ [ den.aspects.common ];
 
     nixos.system.stateVersion = "26.05";
     homeManager.home.stateVersion = "26.05";

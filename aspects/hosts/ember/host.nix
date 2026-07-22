@@ -4,7 +4,6 @@
     includes =
       with den.aspects;
       [
-        common
         dev
         graphical
         tiling-wm

@@ -2,7 +2,6 @@
 {
   den.aspects.ash = {
     includes = with den.aspects; [
-      common
       server
       dev
       homelab
