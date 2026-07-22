@@ -3,10 +3,6 @@
   den.aspects.dev.includes = [ den.aspects.dev.fish ];
 
   den.aspects.dev.fish = {
-    nixos = {
-      programs.fish.enable = true;
-    };
-
     homeManager =
       {
         pkgs,
@@ -16,7 +12,6 @@
       }:
       {
         programs.fish = {
-          enable = true;
           shellAliases = {
             ls = "ls -A --color=auto --group-directories-first";
           };
