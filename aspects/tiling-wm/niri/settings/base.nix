@@ -28,6 +28,13 @@
             };
           };
 
+          input = {
+            keyboard.xkb = {
+              layout = "us,ru";
+              options = "grp:win_space_toggle";
+            };
+          };
+
           layout = {
             tab-indicator = {
               position = "top";

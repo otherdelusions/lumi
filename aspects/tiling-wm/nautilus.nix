@@ -11,7 +11,6 @@
         ...
       }:
       let
-        compositor = host.desktop.compositor;
         terminal = host.desktop.terminal;
       in
       {
@@ -26,25 +25,6 @@
           enable = lib.mkDefault true;
           inherit terminal;
         };
-
-        xdg.portal = {
-          enable = true;
-          config = lib.mkIf (compositor != null) {
-            ${compositor} = {
-              default = [
-                "gnome"
-                "gtk"
-              ];
-              "org.freedesktop.impl.portal.Access" = "gtk";
-              "org.freedesktop.impl.portal.FileChooser" = "gnome";
-              "org.freedesktop.impl.portal.Notification" = "gtk";
-              "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
-            };
-          };
-          extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
-        };
-
-        environment.variables.GTK_USE_PORTAL = lib.mkDefault "1";
       };
 
     homeManager =
