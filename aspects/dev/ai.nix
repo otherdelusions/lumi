@@ -2,7 +2,6 @@
   den.aspects.dev.ai = {
     homeManager =
       {
-        inputs',
         lib,
         config,
         pkgs,
@@ -19,7 +18,6 @@
       {
         programs.claude-code = {
           enable = true;
-          package = inputs'.llm-agents.packages.claude-code;
 
           settings = {
             attribution = {

@@ -12,7 +12,6 @@
         theming
       ]
       ++ [
-        dev.ai
         browser.librewolf
         netsec.flclash
       ];
