@@ -1,18 +1,13 @@
 {
-  den.aspects.interloper.nixos =
-    { lib, ... }:
-    {
+  den.aspects.interloper = {
+    nixos = {
       services.openssh = {
         enable = true;
         settings = {
           PermitRootLogin = "yes";
-          PasswordAuthentication = true;
+          PermitEmptyPasswords = "yes";
         };
       };
-
-      users.users.root = {
-        password = "root";
-        initialHashedPassword = lib.mkForce null;
-      };
     };
+  };
 }
