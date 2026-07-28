@@ -1,4 +1,4 @@
-{ den, ... }:
+{ den, inputs, ... }:
 {
   den.aspects.common.includes = [ den.aspects.common.nix ];
 
@@ -31,6 +31,8 @@
 
           channel.enable = lib.mkDefault false;
           optimise.automatic = lib.mkDefault (!config.boot.isContainer);
+
+          nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
         };
       };
   };
