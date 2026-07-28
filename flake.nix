@@ -91,5 +91,8 @@
         ./modules
         ./packages
       ]
+      // {
+        debug = true;
+      }
     );
 }
