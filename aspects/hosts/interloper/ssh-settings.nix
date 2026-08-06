@@ -8,6 +8,8 @@
           PermitEmptyPasswords = "yes";
         };
       };
+
+      security.pam.services.sshd.allowNullPassword = true;
     };
   };
 }
