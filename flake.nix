@@ -65,7 +65,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    apple-fonts.url = "github:Lyndeno/apple-fonts.nix/bb4d5244052c1f6cae543baea793bf44f3f8bfb4";
+    apple-fonts.url = "github:Lyndeno/apple-fonts.nix/66b5379c6a429ad4ea6ff3943cc1f651df55cc70";
 
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
