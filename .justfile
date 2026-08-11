@@ -38,7 +38,7 @@ archive:
 
 [doc('Print disk ids for a given device in /dev')]
 @disk-id sdx:
-    find -L /dev/disk/by-id -samefile /dev/{{sdx}} -printf '%f\n' | sort
+    find -L /dev/disk/by-id -samefile /dev/{{sdx}} -printf '/dev/disk/dy-id/%f\n' | sort
 
 [doc('Build an iso of a config')]
 build-iso target='interloper':
