@@ -41,6 +41,9 @@
 # Editor user keys are only used for yaml file edits using sops.
 # We generate them manually using age-keygen
 # to ~/.config/sops/age/keys.txt
+# It's important to know that if you want to use your user secrets
+# on other hosts you'll need to copy the keys.txt to your user
+# home on these hosts
 #
 # Recipients:
 # secrets/users/<user>.yaml - editors and each host the user is on
