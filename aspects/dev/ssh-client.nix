@@ -15,7 +15,7 @@
 
           settings = {
             "*" = {
-              ForwardAgent = false;
+              ForwardAgent = true;
               Compression = false;
               AddKeysToAgent = "yes";
               ControlMaster = "no";
