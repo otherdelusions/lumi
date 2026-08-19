@@ -4,7 +4,7 @@
 
   den.aspects.tiling-wm.dms-shell.settings = {
     homeManager = {
-      programs.dank-material-shell.settings = {
+      programs.dms-shell.settings = {
         widgetBackgroundColor = "sth";
         cornerRadius = 0;
         runUserMatugenTemplates = false;

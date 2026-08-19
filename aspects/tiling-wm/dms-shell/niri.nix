@@ -1,23 +1,14 @@
-{ den, inputs, ... }:
+{ den, ... }:
 {
   den.aspects.tiling-wm.dms-shell.includes = [ den.aspects.tiling-wm.dms-shell.niri ];
 
   den.aspects.tiling-wm.dms-shell.niri = {
-    homeManager =
-      { osConfig, ... }:
-      {
-        imports = [ inputs.dms.homeModules.niri ];
-
-        programs.dank-material-shell.niri.includes = {
-          enable = osConfig.programs.niri.enable;
-          override = true;
-          originalFileName = "niri-flake";
-          filesToInclude = [
-            "alttab"
-            "colors"
-            "layout"
-          ];
-        };
-      };
+    homeManager = { config, ... }: {
+      wayland.windowManager.niri.extraConfig = ''
+        include optional=true "${config.xdg.configHome}/niri/dms/alttab.kdl"
+        include optional=true "${config.xdg.configHome}/niri/dms/colors.kdl"
+        include optional=true "${config.xdg.configHome}/niri/dms/layout.kdl"
+      '';
+    };
   };
 }

@@ -1,4 +1,4 @@
-{ den, inputs, ... }:
+{ den, ... }:
 {
   den.aspects.tiling-wm.includes = [ den.aspects.tiling-wm.dms-greeter ];
 
@@ -11,9 +11,7 @@
           compositor = host.desktop.compositor;
         in
         {
-          imports = [ inputs.dms.nixosModules.greeter ];
-
-          programs.dank-material-shell.greeter = {
+          services.displayManager.dms-greeter = {
             enable = compositor != null;
             logs.save = lib.mkDefault true;
             configHome = "/home/${user.userName}";
