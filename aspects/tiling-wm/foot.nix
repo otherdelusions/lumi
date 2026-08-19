@@ -14,7 +14,7 @@
             };
             cursor = {
               style = "beam";
-              blink = "yes";
+              blink = "no";
             };
           };
         };
