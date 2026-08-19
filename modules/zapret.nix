@@ -11,8 +11,8 @@
       flowsealData = pkgs.fetchFromGitHub {
         owner = "Flowseal";
         repo = "zapret-discord-youtube";
-        tag = "1.9.7b";
-        hash = "sha256-k81WLuDrvG3zjVf3wVgnUTrpomJbuipGJv3TGX7suqc=";
+        tag = "1.10.1";
+        hash = "sha256-LPV9ruCAznU8LL7wT+KMt0fECGMUP+8qo1r5PxqMYxs=";
       };
 
       strategies =
@@ -23,14 +23,16 @@
           flowIp = "${flowsealData}/lists/ipset-all.txt";
 
           quicGoogle = "${flowsealData}/bin/quic_initial_www_google_com.bin";
+          tlsGoogle = "${flowsealData}/bin/tls_clienthello_www_google_com.bin";
           tlsMax = "${flowsealData}/bin/tls_clienthello_max_ru.bin";
+
+          stun2 = "${flowsealData}/bin/stun2.bin";
+          activeGameUdp = "${flowsealData}/bin/ACTIVE_GAME_UDP.bin";
         in
         {
           flow_alt3_nogen = {
             udpPorts = [
               "443"
-              "19294:19344"
-              "50000:50100"
               "1024:65535"
             ];
             filters = [
@@ -45,8 +47,6 @@
           flow_alt9_nogen = {
             udpPorts = [
               "443"
-              "19294:19344"
-              "50000:50100"
               "1024:65535"
             ];
             filters = [
@@ -56,6 +56,20 @@
               "--filter-udp=443 --ipset=\"${flowIp}\" --hostlist-exclude=\"${flowEx}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-fake-quic=\"${quicGoogle}\" --new"
               "--filter-tcp=80,443,8443 --ipset=\"${flowIp}\" --hostlist-exclude=\"${flowEx}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=hostfakesplit --dpi-desync-repeats=4 --dpi-desync-fooling=ts --dpi-desync-hostfakesplit-mod=host=ozon.ru --new"
               "--filter-udp=1024-65535 --ipset=\"${flowIp}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=fake --dpi-desync-repeats=12 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp=\"${quicGoogle}\" --dpi-desync-cutoff=n2"
+            ];
+          };
+          flow_alt11_nogen = {
+            udpPorts = [
+              "443"
+              "1024:65535"
+            ];
+            filters = [
+              "--filter-udp=443 --hostlist-exclude=\"${flowEx}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=fake --dpi-desync-repeats=11 --dpi-desync-fake-quic=\"${quicGoogle}\" --new"
+              "--filter-tcp=443 --hostlist=\"${flowGoogle}\" --ip-id=zero --dpi-desync=fake,multisplit --dpi-desync-split-pos=1 --dpi-desync-split-seqovl=681 --dpi-desync-fooling=ts --dpi-desync-repeats=8 --dpi-desync-split-seqovl-pattern=\"${tlsGoogle}\" --dpi-desync-fake-tls=\"${tlsGoogle}\" --new"
+              "--filter-tcp=80,443 --hostlist-exclude=\"${flowEx}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=fake,multisplit --dpi-desync-split-seqovl=664 --dpi-desync-split-pos=1 --dpi-desync-repeats=8 --dpi-desync-fooling=ts --dpi-desync-split-seqovl-pattern=\"${tlsMax}\" --dpi-desync-fake-tls=\"${stun2}\" --dpi-desync-fake-tls=\"${tlsMax}\" --dpi-desync-fake-http=\"${tlsMax}\" --new"
+              "--filter-udp=443 --ipset=\"${flowIp}\" --hostlist-exclude=\"${flowEx}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=fake --dpi-desync-repeats=11 --dpi-desync-fake-quic=\"${quicGoogle}\" --new"
+              "--filter-tcp=80,443,8443 --ipset=\"${flowIp}\" --hostlist-exclude=\"${flowEx}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=fake,multisplit --dpi-desync-split-seqovl=664 --dpi-desync-split-pos=1 --dpi-desync-fooling=ts --dpi-desync-repeats=8 --dpi-desync-split-seqovl-pattern=\"${tlsMax}\" --dpi-desync-fake-tls=\"${stun2}\" --dpi-desync-fake-tls=\"${tlsMax}\" --dpi-desync-fake-http=\"${tlsMax}\" --new"
+              "--filter-udp=1024-65535 --ipset=\"${flowIp}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=fake --dpi-desync-repeats=10 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp=\"${activeGameUdp}\" --dpi-desync-cutoff=n4"
             ];
           };
         };
