@@ -10,7 +10,7 @@
         pkgs,
         ...
       }:
-      lib.mkIf (config.programs ? dank-material-shell && config.programs.dank-material-shell.enable) {
+      {
         programs.dank-material-shell.settings = {
           greeterFontFamily = config.stylix.fonts.sansSerif.name;
           fontScale = 1.14;

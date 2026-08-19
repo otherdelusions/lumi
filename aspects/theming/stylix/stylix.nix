@@ -13,7 +13,7 @@
     };
 
     nixos =
-      { inputs', ... }:
+      { inputs', pkgs, ... }:
       {
         imports = [
           inputs.stylix.nixosModules.stylix
@@ -67,6 +67,12 @@
                 package = apple-fonts.ny-nerd;
                 name = "New York Nerd Font";
               };
+            };
+
+            cursor = {
+              name = "Adwaita";
+              package = pkgs.adwaita-icon-theme;
+              size = 24;
             };
           };
       };
