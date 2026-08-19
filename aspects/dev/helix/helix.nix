@@ -6,9 +6,7 @@
     homeManager =
       {
         host,
-        inputs',
         lib,
-        config,
         pkgs,
         ...
       }:
@@ -18,7 +16,8 @@
       {
         programs.helix = {
           enable = true;
-          package = inputs'.helix.packages.helix;
+          package = pkgs.steelix;
+          defaultEditor = true;
 
           extraPackages = with pkgs; [
             nixd
@@ -37,11 +36,6 @@
           type = "Application";
           noDisplay = true;
           terminal = false;
-        };
-
-        home.sessionVariables = lib.mkIf config.programs.helix.enable {
-          EDITOR = lib.mkDefault "hx";
-          VISUAL = lib.mkDefault "hx";
         };
       };
   };
