@@ -11,7 +11,7 @@
         ...
       }:
       {
-        options.programs.niri = {
+        options.wayland.windowManager.niri = {
           backlightDevice = lib.mkOption {
             type = lib.types.str;
             default = "backlight:intel_backlight";
@@ -19,9 +19,9 @@
           };
         };
 
-        config.programs.niri.settings.binds =
+        config.wayland.windowManager.niri.settings.binds =
           let
-            cfg = config.programs.niri;
+            cfg = config.wayland.windowManager.niri;
             terminal = host.desktop.terminal;
 
             dmsIpc = [
@@ -31,122 +31,183 @@
             ];
           in
           {
-            "Super+R".action.spawn = dmsIpc ++ [
-              "spotlight"
-              "toggle"
-            ];
-            "Super+P".action.spawn = dmsIpc ++ [
-              "powermenu"
-              "toggle"
-            ];
-            "XF86AudioRaiseVolume".action.spawn = dmsIpc ++ [
-              "audio"
-              "increment"
-              "5%"
-            ];
-            "XF86AudioLowerVolume".action.spawn = dmsIpc ++ [
-              "audio"
-              "decrement"
-              "5%"
-            ];
-            "XF86MonBrightnessUp".action.spawn = dmsIpc ++ [
-              "brightness"
-              "increment"
-              "5%"
-              cfg.backlightDevice
-            ];
-            "XF86MonBrightnessDown".action.spawn = dmsIpc ++ [
-              "brightness"
-              "decrement"
-              "5%"
-              cfg.backlightDevice
-            ];
-            "XF86AudioMute".action.spawn = dmsIpc ++ [
-              "audio"
-              "mute"
-            ];
-            "XF86AudioMicMute".action.spawn = dmsIpc ++ [
-              "audio"
-              "micmute"
-            ];
-            "XF86Tools".action.spawn = dmsIpc ++ [
-              "settings"
-              "focusOrToggle"
-            ];
-            "XF86Display".action.spawn = dmsIpc ++ [
-              "inhibit"
-              "toggle"
-            ];
-            "Super+L".action.spawn = dmsIpc ++ [
+            "Super+R" = {
+              _props.repeat = false;
+              spawn = dmsIpc ++ [
+                "spotlight"
+                "toggle"
+              ];
+            };
+            "Super+P" = {
+              _props.repeat = false;
+              spawn = dmsIpc ++ [
+                "powermenu"
+                "toggle"
+              ];
+            };
+
+            "XF86AudioRaiseVolume" = {
+              _props.allow-when-locked = true;
+              spawn = dmsIpc ++ [
+                "audio"
+                "increment"
+                "5%"
+              ];
+            };
+
+            "XF86AudioLowerVolume" = {
+              _props.allow-when-locked = true;
+              spawn = dmsIpc ++ [
+                "audio"
+                "decrement"
+                "5%"
+              ];
+            };
+            "XF86MonBrightnessUp" = {
+              _props.allow-when-locked = true;
+              spawn = dmsIpc ++ [
+                "brightness"
+                "increment"
+                "5%"
+                cfg.backlightDevice
+              ];
+            };
+            "XF86MonBrightnessDown" = {
+              _props.allow-when-locked = true;
+              spawn = dmsIpc ++ [
+                "brightness"
+                "decrement"
+                "5%"
+                cfg.backlightDevice
+              ];
+            };
+            "XF86AudioMute" = {
+              _props.repeat = false;
+              _props.allow-when-locked = true;
+              spawn = dmsIpc ++ [
+                "audio"
+                "mute"
+              ];
+            };
+            "XF86AudioMicMute" = {
+              _props.repeat = false;
+              _props.allow-when-locked = true;
+              spawn = dmsIpc ++ [
+                "audio"
+                "micmute"
+              ];
+            };
+            "XF86Tools" = {
+              _props.repeat = false;
+              spawn = dmsIpc ++ [
+                "settings"
+                "focusOrToggle"
+              ];
+            };
+            "XF86Display" = {
+              _props.repeat = false;
+              spawn = dmsIpc ++ [
+                "inhibit"
+                "toggle"
+              ];
+            };
+            "Super+L".spawn = dmsIpc ++ [
               "lock"
               "lock"
             ];
 
-            "Super+Left".action.focus-column-left = [ ];
-            "Super+Down".action.focus-window-down = [ ];
-            "Super+Up".action.focus-window-up = [ ];
-            "Super+Right".action.focus-column-right = [ ];
-            "Super+Ctrl+Left".action.move-column-left = [ ];
-            "Super+Ctrl+Down".action.move-window-down = [ ];
-            "Super+Ctrl+Up".action.move-window-up = [ ];
-            "Super+Ctrl+Right".action.move-column-right = [ ];
+            "Super+Left".focus-column-left = { };
+            "Super+Down".focus-window-down = { };
+            "Super+Up".focus-window-up = { };
+            "Super+Right".focus-column-right = { };
+            "Super+Ctrl+Left".move-column-left = { };
+            "Super+Ctrl+Down".move-window-down = { };
+            "Super+Ctrl+Up".move-window-up = { };
+            "Super+Ctrl+Right".move-column-right = { };
 
-            "Super+Home".action.focus-column-first = [ ];
-            "Super+End".action.focus-column-last = [ ];
-            "Super+Ctrl+Home".action.move-column-to-first = [ ];
-            "Super+Ctrl+End".action.move-column-to-last = [ ];
+            "Super+Home".focus-column-first = { };
+            "Super+End".focus-column-last = { };
+            "Super+Ctrl+Home".move-column-to-first = { };
+            "Super+Ctrl+End".move-column-to-last = { };
 
-            "Super+Page_Down".action.focus-workspace-down = [ ];
-            "Super+Page_Up".action.focus-workspace-up = [ ];
-            "Super+Ctrl+Page_Down".action.move-column-to-workspace-down = [ ];
-            "Super+Ctrl+Page_Up".action.move-column-to-workspace-up = [ ];
-            "Super+Shift+Page_Down".action.move-workspace-down = [ ];
-            "Super+Shift+Page_Up".action.move-workspace-up = [ ];
+            "Super+Page_Down".focus-workspace-down = { };
+            "Super+Page_Up".focus-workspace-up = { };
+            "Super+Ctrl+Page_Down".move-column-to-workspace-down = { };
+            "Super+Ctrl+Page_Up".move-column-to-workspace-up = { };
+            "Super+Shift+Page_Down".move-workspace-down = { };
+            "Super+Shift+Page_Up".move-workspace-up = { };
 
-            "Super+BracketLeft".action.consume-or-expel-window-left = [ ];
-            "Super+BracketRight".action.consume-or-expel-window-right = [ ];
-            "Super+Comma".action.consume-window-into-column = [ ];
-            "Super+Period".action.expel-window-from-column = [ ];
+            "Super+BracketLeft".consume-or-expel-window-left = { };
+            "Super+BracketRight".consume-or-expel-window-right = { };
+            "Super+Comma".consume-window-into-column = { };
+            "Super+Period".expel-window-from-column = { };
 
-            "Super+T".action.switch-preset-column-width = [ ];
-            "Super+Shift+T".action.switch-preset-window-height = [ ];
-            "Super+Ctrl+T".action.reset-window-height = [ ];
-            "Super+F".action.maximize-column = [ ];
-            "Super+Shift+F".action.fullscreen-window = [ ];
-            "Super+Ctrl+F".action.expand-column-to-available-width = [ ];
-
-            "Super+Minus".action.set-column-width = "-10%";
-            "Super+Equal".action.set-column-width = "+10%";
-            "Super+Shift+Minus".action.set-window-height = "-10%";
-            "Super+Shift+Equal".action.set-window-height = "+10%";
-
-            "Print".action.screenshot = {
-              show-pointer = false;
+            "Super+T" = {
+              _props.cooldown-ms = 100;
+              switch-preset-column-width = { };
             };
-            "Ctrl+Print".action.screenshot-screen = {
-              show-pointer = false;
+            "Super+Shift+T" = {
+              _props.cooldown-ms = 100;
+              switch-preset-window-height = { };
             };
-            "Alt+Print".action.screenshot-window = {
-              show-pointer = false;
+            "Super+Ctrl+T".reset-window-height = { };
+            "Super+F" = {
+              _props.repeat = false;
+              maximize-column = { };
+            };
+            "Super+Shift+F" = {
+              _props.repeat = false;
+              fullscreen-window = { };
+            };
+            "Super+Ctrl+F".expand-column-to-available-width = { };
+
+            "Super+Minus".set-column-width = "-10%";
+            "Super+Equal".set-column-width = "+10%";
+            "Super+Shift+Minus".set-window-height = "-10%";
+            "Super+Shift+Equal".set-window-height = "+10%";
+
+            "Print".screenshot = {
+              _props.show-pointer = false;
+            };
+            "Ctrl+Print".screenshot-screen = {
+              _props.show-pointer = false;
+            };
+            "Alt+Print".screenshot-window = {
+              _props.show-pointer = false;
             };
 
-            "Super+W".action.toggle-column-tabbed-display = [ ];
-            "Super+V".action.toggle-window-floating = [ ];
-            "Super+D".action.center-column = [ ];
-            "Super+C".action.close-window = [ ];
+            "Super+W" = {
+              _props.repeat = false;
+              toggle-column-tabbed-display = { };
+            };
+            "Super+V" = {
+              _props.repeat = false;
+              toggle-window-floating = { };
+            };
+            "Super+D".center-column = { };
+            "Super+C" = {
+              _props.cooldown-ms = 100;
+              close-window = { };
+            };
 
-            "Ctrl+Alt+Delete".action.quit = [ ];
+            "Ctrl+Alt+Delete".quit = { };
 
-            "Mod+Tab".action.toggle-overview = [ ];
+            "Mod+Tab" = {
+              _props.repeat = false;
+              toggle-overview = { };
+            };
           }
           // lib.mergeAttrsList (
             map (num: {
-              "Super+${toString num}".action.focus-workspace = num;
-              "Super+Control+${toString num}".action.move-column-to-workspace = num;
+              "Super+${toString num}".focus-workspace = num;
+              "Super+Control+${toString num}".move-column-to-workspace = num;
             }) (lib.range 1 9)
           )
           // lib.optionalAttrs (terminal != null) {
-            "Super+Q".action.spawn = terminal;
+            "Super+Q" = {
+              _props.cooldown-ms = 500;
+              spawn = terminal;
+            };
           };
       };
   };
