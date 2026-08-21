@@ -21,9 +21,12 @@
       networking.networkmanager.enable = true;
       nixpkgs.config.allowUnfree = true;
 
-      systemd.user.services.niri-flake-polkit.enable = false;
-
       documentation.man.cache.enable = false;
+
+      services.avahi = {
+        enable = true;
+        nssmdns4 = true;
+      };
     };
   };
 }

@@ -15,7 +15,7 @@
 
           settings = {
             "*" = {
-              ForwardAgent = true;
+              ForwardAgent = lib.mkDefault true;
               Compression = false;
               AddKeysToAgent = "yes";
               ControlMaster = "no";
@@ -23,8 +23,8 @@
             };
           }
           // lib.mapAttrs (_: host: {
-            HostName = host.hostName;
-            User = user.userName;
+            HostName = lib.mkDefault "${host.hostName}.local"; # mdns name
+            User = lib.mkDefault user.userName;
           }) sshHosts;
         };
       };
