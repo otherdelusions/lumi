@@ -24,7 +24,7 @@
         ];
 
         sops = {
-          defaultSopsFile = ../../secrets/hosts + "/${host.name}.yaml";
+          defaultSopsFile = ../../secrets/hosts + "/${host.name}.yaml"; # by default secrets will be searched in this file
           age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
         };
       };
