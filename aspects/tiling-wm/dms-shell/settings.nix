@@ -21,10 +21,12 @@
         batteryProfileName = "1";
         lockBeforeSuspend = true;
         showDock = false;
+        clockFormat = "24h";
         notificationOverlayEnabled = false;
-        notificationTimeoutLow = 5000;
+        notificationHistoryEnabled = false;
+        notificationTimeoutLow = 3000;
         notificationTimeoutNormal = 5000;
-        notificationTimeoutCritical = 0;
+        notificationTimeoutCritical = 30000;
         powerMenuGridLayout = true;
         controlCenterShowBluetoothIcon = false;
         controlCenterShowAudioPercent = false;
@@ -37,6 +39,9 @@
         lockScreenShowProfileImage = false;
         dankLauncherV2Size = "medium";
         dankLauncherV2ShowFooter = false;
+        showOccupiedWorkspacesOnly = true;
+        audioVisualizerEnabled = false;
+        audioScrollMode = "nothing";
 
         controlCenterWidgets = [
           {
@@ -86,6 +91,7 @@
           dms_sysmon.enabled = false;
           dms_notepad.enabled = false;
           dms_settings.enabled = false;
+          dms_clipboard_search.enabled = false;
         };
 
         barConfigs = [
@@ -100,6 +106,11 @@
             centerWidgets = [
               "music"
               "clock"
+              {
+                id = "keyboard_layout_name";
+                enabled = true;
+              }
+
             ];
             rightWidgets = [
               "systemTray"

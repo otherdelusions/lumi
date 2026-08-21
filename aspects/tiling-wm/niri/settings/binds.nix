@@ -166,14 +166,37 @@
             "Super+Shift+Minus".set-window-height = "-10%";
             "Super+Shift+Equal".set-window-height = "+10%";
 
-            "Print".screenshot = {
-              _props.show-pointer = false;
+            # "Print".screenshot = {
+            #   _props.show-pointer = false;
+            # };
+            # "Ctrl+Print".screenshot-screen = {
+            #   _props.show-pointer = false;
+            # };
+            # "Alt+Print".screenshot-window = {
+            #   _props.show-pointer = false;
+            # };
+            "Print" = {
+              _props.repeat = false;
+              spawn = [
+                "dms"
+                "screenshot"
+              ];
             };
-            "Ctrl+Print".screenshot-screen = {
-              _props.show-pointer = false;
+            "Ctrl+Print" = {
+              _props.repeat = false;
+              spawn = [
+                "dms"
+                "screenshot"
+                "full"
+              ];
             };
-            "Alt+Print".screenshot-window = {
-              _props.show-pointer = false;
+            "Alt+Print" = {
+              _props.repeat = false;
+              spawn = [
+                "dms"
+                "screenshot"
+                "window"
+              ];
             };
 
             "Super+W" = {

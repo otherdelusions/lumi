@@ -62,6 +62,7 @@
 
         enableCalendarEvents = false;
         enableDynamicTheming = false;
+        enableClipboardPaste = false;
         enableVPN = false;
       };
     };
