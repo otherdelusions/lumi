@@ -33,15 +33,10 @@
           volumes = {
             "/" = {
               path = "/mirror";
-              access = {
-                rwmda = [
-                  "delusion"
-                ];
-              };
+              access.rwmda = [ "delusion" ];
             };
           };
         };
-
       };
     };
   };
