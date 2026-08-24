@@ -22,15 +22,13 @@
 
           functions = {
             proxy-on = ''
-              set -gx http_proxy "http://127.0.0.1:7890"
-              set -gx https_proxy "http://127.0.0.1:7890"
-              set -gx all_proxy "socks5://127.0.0.1:7890"
+              set -gx http_proxy "http://127.0.0.1:7897"
+              set -gx https_proxy "http://127.0.0.1:7897"
               echo "proxy on"
             '';
             proxy-off = ''
               set -ge http_proxy
               set -ge https_proxy
-              set -ge all_proxy
               echo "proxy off"
             '';
           };
