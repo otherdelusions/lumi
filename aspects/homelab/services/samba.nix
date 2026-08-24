@@ -49,7 +49,7 @@
 
             settings = {
               global = lib.mkMerge [
-                (lib.mapAttrs (_: lib.mkDefault) {
+                (lib.mkDefault {
                   workgroup = "WORKGROUP";
                   "server string" = config.networking.hostName;
                   "netbios name" = config.networking.hostName;

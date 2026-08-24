@@ -34,6 +34,12 @@
             default = 3000;
             description = "Forgejo port";
           };
+
+          settings = lib.mkOption {
+            type = lib.types.attrsOf lib.types.anything;
+            default = { };
+            description = "Forgejo settings";
+          };
         };
 
         config = {
@@ -52,17 +58,21 @@
 
             database.type = "sqlite3";
 
-            settings = {
-              server = {
-                DOMAIN = lib.mkDefault hl.baseDomain;
-                ROOT_URL = lib.mkDefault "http://${hl.baseDomain}:${toString cfg.port}/";
-                HTTP_ADDR = lib.mkDefault "0.0.0.0";
-                HTTP_PORT = lib.mkDefault cfg.port;
-                SSH_PORT = lib.mkDefault (lib.head config.services.openssh.ports);
-              };
-              service.DISABLE_REGISTRATION = lib.mkDefault true;
-              session.COOKIE_SECURE = lib.mkDefault false;
-            };
+            settings = lib.mkMerge [
+              (lib.mkDefault {
+                server = {
+                  DOMAIN = hl.baseDomain;
+                  ROOT_URL = "http://${hl.baseDomain}:${toString cfg.port}/";
+                  HTTP_ADDR = "0.0.0.0";
+                  HTTP_PORT = cfg.port;
+                  SSH_PORT = lib.head config.services.openssh.ports;
+                };
+                service.DISABLE_REGISTRATION = true;
+                session.COOKIE_SECURE = false;
+              })
+
+              cfg.settings
+            ];
           };
         };
       };

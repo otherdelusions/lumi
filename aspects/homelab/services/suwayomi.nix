@@ -34,6 +34,12 @@
             default = 8080;
             description = "Suwayomi port";
           };
+
+          settings = lib.mkOption {
+            type = lib.types.attrsOf lib.types.anything;
+            default = { };
+            description = "Suwayomi settings";
+          };
         };
 
         config = {
@@ -53,20 +59,24 @@
             inherit (hl) user group;
             inherit (cfg) dataDir;
 
-            settings.server = {
-              port = lib.mkDefault cfg.port;
-              systemTrayEnabled = lib.mkDefault false;
-              initialOpenInBrowserEnabled = lib.mkDefault false;
-              backupInterval = lib.mkDefault 0;
-              globalUpdateInterval = lib.mkDefault 0;
-              authMode = lib.mkDefault "NONE";
-              opdsEnablePageReadProgress = lib.mkDefault false;
-
-              downloadsPath = lib.mkIf (cfg.mangaDir != null) (
-                lib.mkDefault "${toString cfg.mangaDir}/downloads"
-              );
-              localSourcePath = lib.mkIf (cfg.mangaDir != null) (lib.mkDefault "${toString cfg.mangaDir}/local");
-            };
+            settings = lib.mkMerge [
+              (lib.mkDefault {
+                server = {
+                  inherit (cfg) port;
+                  systemTrayEnabled = false;
+                  initialOpenInBrowserEnabled = false;
+                  backupInterval = 0;
+                  globalUpdateInterval = 0;
+                  authMode = "NONE";
+                  opdsEnablePageReadProgress = false;
+                }
+                // lib.optionalAttrs (cfg.mangaDir != null) {
+                  downloadsPath = "${toString cfg.mangaDir}/downloads";
+                  localSourcePath = "${toString cfg.mangaDir}/local";
+                };
+              })
+              cfg.settings
+            ];
           };
 
           systemd.services.suwayomi-server = {

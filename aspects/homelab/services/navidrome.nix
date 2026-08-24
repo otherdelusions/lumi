@@ -28,6 +28,12 @@
             default = "${hl.dirs.content}/services/navidrome/music";
             description = "Navidrome music directory";
           };
+
+          settings = lib.mkOption {
+            type = lib.types.attrsOf lib.types.anything;
+            default = { };
+            description = "Navidrome settings";
+          };
         };
 
         config = {
@@ -41,13 +47,17 @@
             openFirewall = true;
             inherit (hl) user group;
 
-            settings = {
-              DataFolder = lib.mkDefault cfg.dataDir;
-              MusicFolder = lib.mkDefault cfg.musicDir;
-              Address = lib.mkDefault "0.0.0.0";
-              DefaultDownsamplingFormat = lib.mkDefault "aac";
-              EnableInsightsCollector = lib.mkDefault false;
-            };
+            settings = lib.mkMerge [
+              (lib.mkDefault {
+                DataFolder = cfg.dataDir;
+                MusicFolder = cfg.musicDir;
+                Address = "0.0.0.0";
+                DefaultDownsamplingFormat = "aac";
+                EnableInsightsCollector = false;
+              })
+
+              cfg.settings
+            ];
           };
         };
       };
