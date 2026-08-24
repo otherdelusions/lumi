@@ -3,8 +3,9 @@
   den.aspects.dev.helix.includes = [ den.aspects.dev.helix.settings ];
 
   den.aspects.dev.helix.settings = {
-    homeManager = {
+    homeManager = { lib, ... }: {
       programs.helix.settings = {
+        theme = lib.mkDefault "base16_default";
         editor = {
           scrolloff = 18;
           line-number = "relative";
