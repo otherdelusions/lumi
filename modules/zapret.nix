@@ -30,7 +30,7 @@
           activeGameUdp = "${flowsealData}/bin/ACTIVE_GAME_UDP.bin";
         in
         {
-          flow_alt3_nogen = {
+          s1_any = {
             udpPorts = [
               "443"
               "1024:65535"
@@ -44,7 +44,7 @@
               "--filter-udp=1024-65535 --ipset=\"${flowIp}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=fake --dpi-desync-repeats=10 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp=\"${quicGoogle}\" --dpi-desync-cutoff=n4"
             ];
           };
-          flow_alt9_nogen = {
+          s2_any = {
             udpPorts = [
               "443"
               "1024:65535"
@@ -58,7 +58,7 @@
               "--filter-udp=1024-65535 --ipset=\"${flowIp}\" --ipset-exclude=\"${flowIpEx}\" --dpi-desync=fake --dpi-desync-repeats=12 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp=\"${quicGoogle}\" --dpi-desync-cutoff=n2"
             ];
           };
-          flow_alt11_nogen = {
+          s3_any = {
             udpPorts = [
               "443"
               "1024:65535"

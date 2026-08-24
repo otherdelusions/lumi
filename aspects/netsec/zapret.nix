@@ -9,7 +9,7 @@
       netsec.zapret = {
         enable = true;
         addHosts = true;
-        strategy = "flow_alt11_nogen";
+        strategy = "s2_any";
       };
     };
   };
