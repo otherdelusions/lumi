@@ -13,7 +13,6 @@
       ]
       ++ [
         browser.librewolf
-        netsec.flclash
       ];
 
     nixos = {

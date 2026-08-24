@@ -6,10 +6,9 @@
     nixos = {
       programs.librewolf.policies.SearchEngines = {
         Remove = [
-          "Google"
-          "Bing"
-          "Perplexity"
+          "Mojeek"
           "Wikipedia (en)"
+          "Startpage"
         ];
         Add = [
           {
