@@ -54,8 +54,8 @@
           services.copyparty = {
             enable = true;
 
-            user = config.homelab.user;
-            group = config.homelab.group;
+            inherit (hl) user group;
+            inherit (cfg) accounts volumes;
 
             settings = lib.mkMerge [
               (lib.mkDefault {
@@ -69,8 +69,6 @@
               cfg.settings
               { p = cfg.port; }
             ];
-
-            inherit (cfg) accounts volumes;
           };
 
           networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.port ];
