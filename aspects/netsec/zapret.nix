@@ -1,10 +1,10 @@
-{ den, config, ... }:
+{ den, inputs, ... }:
 {
   den.aspects.netsec.includes = [ den.aspects.netsec.zapret ];
 
   den.aspects.netsec.zapret = {
     nixos = {
-      imports = [ config.flake.nixosModules.zapret ];
+      imports = [ inputs.self.nixosModules.zapret ];
 
       netsec.zapret = {
         enable = true;
