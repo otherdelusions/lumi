@@ -4,13 +4,18 @@
     {
       packages.morewaita-stylix-icon-theme = pkgs.callPackage (
         {
+          stdenv,
           lib,
-          pkgs,
+          fetchFromGitHub,
+          gtk3,
+          adwaita-icon-theme,
+          morewaita-icon-theme,
           accentColor ? "",
         }:
         let
           variant = if accentColor == "" then "blue" else "stylix";
           accent = lib.removePrefix "#" accentColor;
+
           brighten = channel: lib.min 255 (lib.fromHexString channel * 135 / 100);
           hexByte = n: lib.toLower (lib.fixedWidthString 2 "0" (lib.toHexString n));
           highlight = lib.concatMapStrings (offset: hexByte (brighten (builtins.substring offset 2 accent))) [
@@ -19,25 +24,26 @@
             4
           ];
         in
-        pkgs.stdenv.mkDerivation {
+        stdenv.mkDerivation {
           pname = "morewaita-stylix-icon-theme";
           version = "367849d";
 
-          src = pkgs.fetchFromGitHub {
+          src = fetchFromGitHub {
             owner = "dpejoh";
             repo = "Adwaita-colors";
             rev = "367849dcdd269f9be17b143763eb7279087ab88c";
             hash = "sha256-R71ZRoDdlWJy+TkWkmXwyRWJTAYi4QOSmnO6GiOfGCM=";
           };
 
-          nativeBuildInputs = with pkgs; [
+          nativeBuildInputs = [
             gtk3
-            adwaita-icon-theme
           ];
-          propagatedBuildInputs = with pkgs; [
+          buildInputs = [ adwaita-icon-theme ];
+          propagatedBuildInputs = [
             morewaita-icon-theme
             adwaita-icon-theme
           ];
+
           dontDropIconThemeCache = true;
           dontBuild = true;
 
