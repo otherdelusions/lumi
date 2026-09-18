@@ -19,20 +19,28 @@
 
       servicesTable = pkgs.writeTextFile {
         name = "homelab-services-table";
-        text = ''
-          | service | description | icon |
-          | --- | --- | --- |
-          ${lib.concatStringsSep "\n" (lib.mapAttrsToList mkRow self.homelabServices)}
-        '';
+        text =
+          if self.homelabServices == { } then
+            ""
+          else
+            ''
+              | service | description | icon |
+              | --- | --- | --- |
+              ${lib.concatStringsSep "\n" (lib.mapAttrsToList mkRow self.homelabServices)}
+            '';
       };
 
       containersTable = pkgs.writeTextFile {
         name = "homelab-containers-table";
-        text = ''
-          | container | description | icon |
-          | --- | --- | --- |
-          ${lib.concatStringsSep "\n" (lib.mapAttrsToList mkRow self.homelabContainers)}
-        '';
+        text =
+          if self.homelabContainers == { } then
+            ""
+          else
+            ''
+              | container | description | icon |
+              | --- | --- | --- |
+              ${lib.concatStringsSep "\n" (lib.mapAttrsToList mkRow self.homelabContainers)}
+            '';
       };
 
       mkApp =
