@@ -7,7 +7,6 @@
       programs.helix.languages =
         let
           flake = "(builtins.getFlake (builtins.toString ./.))";
-          hmExpr = "${nixosExpr}.home-manager.users.type.getSubOptions []";
           nixosExpr = "${flake}.nixosConfigurations.${host.hostName}.options";
         in
         {
@@ -23,7 +22,6 @@
 
               options = {
                 nixos.expr = nixosExpr;
-                home-manager.expr = hmExpr;
                 flake-parts.expr = "${flake}.debug.options";
                 flake-parts-perSystem.expr = "${flake}.currentSystem.options";
               };
