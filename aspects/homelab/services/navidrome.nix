@@ -60,8 +60,8 @@
 
         config = {
           systemd.services.navidrome.unitConfig.RequiresMountsFor = [
-            (toString cfg.dataDir)
-            (toString cfg.musicDir)
+            "${cfg.dataDir}"
+            "${cfg.musicDir}"
           ];
 
           services.navidrome = {

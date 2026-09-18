@@ -86,8 +86,8 @@
           networking.firewall.allowedTCPPorts = [ cfg.port ];
 
           systemd.services.forgejo.unitConfig.RequiresMountsFor = [
-            (toString cfg.dataDir)
-            (toString cfg.repoDir)
+            "${cfg.dataDir}"
+            "${cfg.repoDir}"
           ];
 
           services.forgejo = {
@@ -102,7 +102,7 @@
               (mkDefault {
                 server = {
                   DOMAIN = hl.baseDomain;
-                  ROOT_URL = "http://${hl.baseDomain}:${toString cfg.port}/";
+                  ROOT_URL = "http://${hl.baseDomain}:${cfg.port}/";
                   HTTP_ADDR = "0.0.0.0";
                   HTTP_PORT = cfg.port;
                   SSH_PORT = head config.services.openssh.ports;

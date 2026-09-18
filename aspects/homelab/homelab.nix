@@ -8,43 +8,54 @@
     nixos =
       { lib, config, ... }:
       let
+        inherit (lib)
+          mkOption
+          mkIf
+          ;
+
+        inherit (lib.types)
+          str
+          nullOr
+          ;
+
         hl = config.homelab;
       in
       {
         options.homelab = {
-          user = lib.mkOption {
+          user = mkOption {
+            type = str;
             default = "homelab";
-            type = lib.types.str;
-            description = "Homelab user name";
+            example = "media";
+            description = "User under which homelab runs.";
           };
 
-          group = lib.mkOption {
+          group = mkOption {
+            type = str;
             default = "homelab";
-            type = lib.types.str;
-            description = "Homelab group name";
+            example = "media";
+            description = "Group under which homelab runs.";
           };
 
-          timeZone = lib.mkOption {
+          timeZone = mkOption {
+            type = nullOr str;
             default = config.time.timeZone;
-            type = lib.types.nullOr lib.types.str;
-            description = "Homelab timezone";
+            example = "America/New_York";
+            description = "Homelab's timezone.";
           };
 
-          baseDomain = lib.mkOption {
+          baseDomain = mkOption {
+            type = str;
             default = "localhost";
-            type = lib.types.str;
-            description = "Base domain of the homelab";
+            example = "example.com";
+            description = "Base domain of the homelab.";
           };
         };
 
         config = {
-          systemd.tmpfiles.rules = [
-            "d ${hl.dirs.data} 0755 ${hl.user} ${hl.group} -"
-          ];
-
           users = {
             groups.${hl.group}.gid = 1500;
-            users.${hl.user} = {
+
+            users.${hl.user} = mkIf (hl.user != user.userName) {
               isSystemUser = true;
               uid = 1500;
               inherit (hl) group;

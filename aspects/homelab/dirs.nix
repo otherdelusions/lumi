@@ -3,31 +3,67 @@
     nixos =
       { lib, config, ... }:
       let
+        inherit (lib)
+          mkOption
+          literalExpression
+          genAttrs
+          unique
+          ;
+
+        inherit (lib.types)
+          externalPath
+          listOf
+          str
+          ;
+
         hl = config.homelab;
       in
       {
         options.homelab.dirs = {
-          data = lib.mkOption {
-            type = lib.types.externalPath;
+          data = mkOption {
+            type = externalPath;
             default = "/var/lib/homelab";
-            description = "Homelab data directory, holds runtime state of services";
+            example = "/run/homelab";
+            description = "Homelab data directory, holds runtime state of services.";
           };
 
-          content = lib.mkOption {
-            type = lib.types.externalPath;
+          content = mkOption {
+            type = externalPath;
             default = hl.dirs.data;
-            description = "Homelab content directory, holds bulk media served by services";
+            example = "/srv";
+            description = "Homelab content directory, holds bulk media served by services.";
           };
 
-          extra = lib.mkOption {
-            type = lib.types.listOf lib.types.str;
+          extra = mkOption {
+            type = listOf str;
             default = [ ];
-            description = "List of extra homelab directories";
+            example = literalExpression ''
+              [
+                "/srv/media/music"
+                "/srv/stuff"
+                "/homelab/data"
+              ]
+            '';
+            description = "List of extra homelab directories to create.";
           };
         };
 
-        config = lib.mkIf (hl.dirs.extra != [ ]) {
-          systemd.tmpfiles.rules = map (d: "d ${d} 2775 ${hl.user} ${hl.group} -") (lib.unique hl.dirs.extra);
+        config = {
+          systemd.tmpfiles.settings.homelab-base = {
+            "${hl.dirs.data}".d = {
+              mode = "0755";
+              inherit (hl) user;
+              inherit (hl) group;
+            };
+          };
+
+          systemd.tmpfiles.settings.homelab-extra = genAttrs (unique hl.dirs.extra) (_: {
+            d = {
+              mode = "2775";
+              inherit (hl) user;
+              inherit (hl) group;
+            };
+          });
         };
       };
   };

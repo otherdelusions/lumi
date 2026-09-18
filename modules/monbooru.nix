@@ -59,18 +59,21 @@
         dataDir = mkOption {
           type = externalPath;
           default = "/var/lib/monbooru";
+          example = "/srv/monbooru";
           description = "Data directory holding 'monbooru.toml', databases, plugins and themes.";
         };
 
         user = mkOption {
           type = str;
           default = "monbooru";
+          example = "media";
           description = "User under which monbooru runs.";
         };
 
         group = mkOption {
           type = str;
           default = "monbooru";
+          example = "media";
           description = "Group under which monbooru runs.";
         };
 

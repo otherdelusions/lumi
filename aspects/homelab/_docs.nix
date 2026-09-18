@@ -3,6 +3,12 @@
   perSystem =
     { pkgs, lib, ... }:
     let
+      inherit (lib)
+        concatStringsSep
+        mapAttrsToList
+        mkIf
+        ;
+
       iconSize = "32";
       mkRow =
         name: reg:
@@ -26,7 +32,7 @@
             ''
               | service | description | icon |
               | --- | --- | --- |
-              ${lib.concatStringsSep "\n" (lib.mapAttrsToList mkRow self.homelabServices)}
+              ${concatStringsSep "\n" (mapAttrsToList mkRow self.homelabServices)}
             '';
       };
 
@@ -39,7 +45,7 @@
             ''
               | container | description | icon |
               | --- | --- | --- |
-              ${lib.concatStringsSep "\n" (lib.mapAttrsToList mkRow self.homelabContainers)}
+              ${concatStringsSep "\n" (mapAttrsToList mkRow self.homelabContainers)}
             '';
       };
 
@@ -78,18 +84,18 @@
 
     in
     {
-      apps = lib.mkIf (self.homelabServices != { } || self.homelabContainers != { }) {
+      apps = mkIf (self.homelabServices != { } || self.homelabContainers != { }) {
         homelab-service-table = mkApp {
-          name = "homelab-service-table";
-          desc = "generate services markdown table, uses markers to position the table in a file";
+          name = "homelab-services-table";
+          desc = "Generate services markdown table, uses markers to position the table in a file.";
           table = servicesTable;
           startMarker = "<!-- homelab-services:start -->";
           endMarker = "<!-- homelab-services:end -->";
         };
 
         homelab-container-table = mkApp {
-          name = "homelab-container-table";
-          desc = "generate containers markdown table, uses markers to position the table in a file";
+          name = "homelab-containers-table";
+          desc = "Generate containers markdown table, uses markers to position the table in a file.";
           table = containersTable;
           startMarker = "<!-- homelab-containers:start -->";
           endMarker = "<!-- homelab-containers:end -->";
