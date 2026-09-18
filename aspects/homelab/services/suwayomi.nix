@@ -12,33 +12,61 @@
     nixos =
       { config, lib, ... }:
       let
+        inherit (lib)
+          mkOption
+          literalExpression
+          optionals
+          optionalAttrs
+          mkMerge
+          mkDefault
+          ;
+
+        inherit (lib.types)
+          externalPath
+          nullOr
+          port
+          attrsOf
+          anything
+          ;
+
         hl = config.homelab;
         cfg = hl.services.suwayomi;
       in
       {
         options.homelab.services.suwayomi = {
-          dataDir = lib.mkOption {
-            type = lib.types.externalPath;
+          dataDir = mkOption {
+            type = externalPath;
             default = "${hl.dirs.data}/services/suwayomi";
-            description = "Suwayomi data directory";
+            example = "/var/lib/suwayomi";
+            description = "Suwayomi data directory.";
           };
 
-          mangaDir = lib.mkOption {
-            type = lib.types.nullOr lib.types.externalPath;
+          mangaDir = mkOption {
+            type = nullOr externalPath;
             default = null;
-            description = "Suwayomi manga directory";
+            example = "/srv/manga";
+            description = "Suwayomi manga directory.";
           };
 
-          port = lib.mkOption {
-            type = lib.types.port;
+          port = mkOption {
+            type = port;
             default = 8080;
-            description = "Suwayomi port";
+            example = 9090;
+            description = "Suwayomi service port.";
           };
 
-          settings = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
+          settings = mkOption {
+            type = attrsOf anything;
             default = { };
-            description = "Suwayomi settings";
+            example = literalExpression ''
+              {
+                maxLogFiles = 31;
+                webUIEnabled = true;
+                webUIInterface = "browser";
+                socksProxyEnabled = false;
+              }
+            '';
+            description = "Suwayomi 'server' section settings.";
           };
         };
 
@@ -47,7 +75,7 @@
             "${cfg.dataDir}"
             "${cfg.dataDir}/.local/share"
           ]
-          ++ lib.optionals (cfg.mangaDir != null) [
+          ++ optionals (cfg.mangaDir != null) [
             "${cfg.mangaDir}/local"
             "${cfg.mangaDir}/downloads"
           ];
@@ -59,8 +87,8 @@
             inherit (hl) user group;
             inherit (cfg) dataDir;
 
-            settings = lib.mkMerge [
-              (lib.mkDefault {
+            settings = mkMerge [
+              (mkDefault {
                 server = {
                   inherit (cfg) port;
                   systemTrayEnabled = false;
@@ -70,9 +98,9 @@
                   authMode = "NONE";
                   opdsEnablePageReadProgress = false;
                 }
-                // lib.optionalAttrs (cfg.mangaDir != null) {
-                  downloadsPath = "${toString cfg.mangaDir}/downloads";
-                  localSourcePath = "${toString cfg.mangaDir}/local";
+                // optionalAttrs (cfg.mangaDir != null) {
+                  downloadsPath = "${cfg.mangaDir}/downloads";
+                  localSourcePath = "${cfg.mangaDir}/local";
                 };
               })
               cfg.settings
@@ -81,20 +109,20 @@
 
           systemd.services.suwayomi-server = {
             unitConfig.RequiresMountsFor = [
-              (toString cfg.dataDir)
+              "${cfg.dataDir}"
             ]
-            ++ lib.optional (cfg.mangaDir != null) (toString cfg.mangaDir);
+            ++ optionals (cfg.mangaDir != null) [ "${cfg.mangaDir}" ];
 
             environment = {
-              HOME = toString cfg.dataDir;
-              JAVA_TOOL_OPTIONS = "-Duser.home=${toString cfg.dataDir}";
+              HOME = cfg.dataDir;
+              JAVA_TOOL_OPTIONS = "-Duser.home=${cfg.dataDir}";
             };
 
             serviceConfig = {
               ReadWritePaths = [
-                (toString cfg.dataDir)
+                "${cfg.dataDir}"
               ]
-              ++ lib.optional (cfg.mangaDir != null) (toString cfg.mangaDir);
+              ++ optionals (cfg.mangaDir != null) [ "${cfg.mangaDir}" ];
             };
           };
         };

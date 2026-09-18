@@ -12,27 +12,70 @@
     nixos =
       { config, lib, ... }:
       let
+        inherit (lib)
+          mkOption
+          literalExpression
+          mkMerge
+          mkDefault
+          mapAttrs
+          ;
+
+        inherit (lib.types)
+          attrsOf
+          anything
+          ;
+
         hl = config.homelab;
         cfg = hl.services.samba;
       in
       {
         options.homelab.services.samba = {
-          global = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
+          global = mkOption {
+            type = attrsOf anything;
             default = { };
-            description = "Global Samba settings";
+            example = literalExpression ''
+              {
+                workgroup = "WORKGROUP";
+                "server string" = "Home server";
+                "max protocol" = "SMB3";
+              }
+            '';
+            description = "Global Samba settings.";
           };
 
-          common = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
+          common = mkOption {
+            type = attrsOf anything;
             default = { };
-            description = "Settings applied to all shares";
+            example = literalExpression ''
+              {
+                browseable = "yes";
+                "read only" = "no";
+                "guest ok" = "no";
+                "create mask" = "0644";
+              }
+            '';
+            description = "Settings applied to all shares.";
           };
 
-          shares = lib.mkOption {
-            type = lib.types.attrsOf (lib.types.attrsOf lib.types.anything);
+          shares = mkOption {
+            type = attrsOf (attrsOf anything);
             default = { };
-            description = "Individual share settings";
+            example = literalExpression ''
+              {
+                public = {
+                  path = "/srv/public";
+                  "read only" = "yes";
+                  "guest ok" = "yes";
+                };
+
+                media = {
+                  path = "/srv/media";
+                  "read only" = "no";
+                  "guest ok" = "no";
+                };
+              }
+            '';
+            description = "Individual share settings. Values set here override common settings.";
           };
         };
 
@@ -48,8 +91,8 @@
             openFirewall = true;
 
             settings = {
-              global = lib.mkMerge [
-                (lib.mkDefault {
+              global = mkMerge [
+                (mkDefault {
                   workgroup = "WORKGROUP";
                   "server string" = config.networking.hostName;
                   "netbios name" = config.networking.hostName;
@@ -62,7 +105,7 @@
                 cfg.global
               ];
             }
-            // lib.mapAttrs (
+            // mapAttrs (
               _: value:
               {
                 browseable = "yes";

@@ -12,27 +12,49 @@
     nixos =
       { config, lib, ... }:
       let
+        inherit (lib)
+          mkOption
+          literalExpression
+          mkMerge
+          mkDefault
+          ;
+
+        inherit (lib.types)
+          externalPath
+          attrsOf
+          anything
+          ;
+
         hl = config.homelab;
         cfg = hl.services.navidrome;
       in
       {
         options.homelab.services.navidrome = {
-          dataDir = lib.mkOption {
-            type = lib.types.externalPath;
+          dataDir = mkOption {
+            type = externalPath;
             default = "${hl.dirs.data}/services/navidrome";
-            description = "Navidrome data directory";
+            example = "/var/lib/navidrome";
+            description = "Navidrome data directory.";
           };
 
-          musicDir = lib.mkOption {
-            type = lib.types.externalPath;
+          musicDir = mkOption {
+            type = externalPath;
             default = "${hl.dirs.content}/services/navidrome/music";
-            description = "Navidrome music directory";
+            example = "/srv/navidrome/music";
+            description = "Navidrome music directory.";
           };
 
-          settings = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
+          settings = mkOption {
+            type = attrsOf anything;
             default = { };
-            description = "Navidrome settings";
+            example = literalExpression ''
+              {
+                ScanSchedule = "@every 1h";
+                Address = "127.0.0.1";
+                Deezer.Enabled = false;
+              }
+            '';
+            description = "Navidrome service settings.";
           };
         };
 
@@ -45,10 +67,11 @@
           services.navidrome = {
             enable = true;
             openFirewall = true;
+
             inherit (hl) user group;
 
-            settings = lib.mkMerge [
-              (lib.mkDefault {
+            settings = mkMerge [
+              (mkDefault {
                 DataFolder = cfg.dataDir;
                 MusicFolder = cfg.musicDir;
                 Address = "0.0.0.0";

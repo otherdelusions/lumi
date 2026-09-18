@@ -17,19 +17,36 @@
         ...
       }:
       let
+        inherit (lib)
+          mkOption
+          literalExpression
+          mkMerge
+          mkDefault
+          ;
+
+        inherit (lib.types)
+          strMatching
+          externalPath
+          str
+          listOf
+          submodule
+          nullOr
+          path
+          ;
+
         hl = config.homelab;
         cfg = hl.services.monbooru;
         settingsFormat = pkgs.formats.toml { };
 
         galleryOpts = _: {
           options = {
-            name = lib.mkOption {
-              type = lib.types.strMatching "[A-Za-z0-9_-]+";
-              description = "Gallery name";
+            name = mkOption {
+              type = strMatching "[A-Za-z0-9_-]+";
+              description = "Gallery name.";
             };
-            gallery_path = lib.mkOption {
-              type = lib.types.externalPath;
-              description = "Filesystem gallery root";
+            gallery_path = mkOption {
+              type = externalPath;
+              description = "Filesystem gallery root.";
             };
           };
         };
@@ -38,40 +55,57 @@
         imports = [ inputs.self.nixosModules.monbooru ];
 
         options.homelab.services.monbooru = {
-          dataDir = lib.mkOption {
-            type = lib.types.externalPath;
+          dataDir = mkOption {
+            type = externalPath;
             default = "${hl.dirs.data}/services/monbooru";
-            description = "Monbooru data directory";
+            example = "/var/lib/monbooru";
+            description = "Monbooru data directory.";
           };
 
-          bindAddress = lib.mkOption {
-            type = lib.types.str;
+          bindAddress = mkOption {
+            type = str;
             default = "127.0.0.1:8080";
-            description = "address:port to listen on";
+            example = "0.0.0.0:9090";
+            description = "address:port to listen on.";
           };
 
-          baseUrl = lib.mkOption {
-            type = lib.types.str;
+          baseUrl = mkOption {
+            type = str;
             default = "http://localhost:8080";
-            description = "Monbooru base URL";
+            example = "https://monbooru.example.com";
+            description = "Monbooru base URL.";
           };
 
-          galleries = lib.mkOption {
-            type = lib.types.listOf (lib.types.submodule galleryOpts);
+          galleries = mkOption {
+            type = listOf (submodule galleryOpts);
             default = [ ];
-            description = "List of named galleries to index";
+            example = literalExpression ''
+              [
+                { name = "default"; gallery_path = "/srv/monbooru/gallery"; }
+                { name = "art"; gallery_path = "/srv/monbooru/art"; }
+              ]
+            '';
+            description = "List of named galleries to index.";
           };
 
-          passwordFile = lib.mkOption {
-            type = lib.types.nullOr lib.types.path;
+          passwordFile = mkOption {
+            type = nullOr path;
             default = null;
-            description = "Path to a file containing a password to derive hash from";
+            example = "/run/secrets/monbooru-password";
+            description = "Path to a file containing a plaintext web UI password.";
           };
 
-          settings = lib.mkOption {
+          settings = mkOption {
             inherit (settingsFormat) type;
             default = { };
-            description = "Monbooru settings";
+            example = literalExpression ''
+              {
+                server.monloader_url = "http://localhost:9000";
+                auth.session_lifetime_days = 30;
+                log.level = "info";
+              }
+            '';
+            description = "Monbooru service settings";
           };
         };
 
@@ -85,8 +119,8 @@
             inherit (hl) user group timeZone;
             inherit (cfg) passwordFile;
 
-            settings = lib.mkMerge [
-              (lib.mkDefault {
+            settings = mkMerge [
+              (mkDefault {
                 server = {
                   bind_address = cfg.bindAddress;
                   base_url = cfg.baseUrl;

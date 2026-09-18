@@ -12,33 +12,73 @@
     nixos =
       { config, lib, ... }:
       let
+        inherit (lib)
+          mkOption
+          literalExpression
+          mkMerge
+          mkDefault
+          head
+          ;
+
+        inherit (lib.types)
+          externalPath
+          port
+          attrsOf
+          anything
+          ;
+
         hl = config.homelab;
         cfg = hl.services.forgejo;
       in
       {
         options.homelab.services.forgejo = {
-          dataDir = lib.mkOption {
-            type = lib.types.externalPath;
+          dataDir = mkOption {
+            type = externalPath;
             default = "${hl.dirs.data}/services/forgejo";
-            description = "Forgejo data directory";
+            example = "/var/lib/forgejo";
+            description = "Forgejo data directory.";
           };
 
-          repoDir = lib.mkOption {
-            type = lib.types.externalPath;
+          repoDir = mkOption {
+            type = externalPath;
             default = "${hl.dirs.content}/services/forgejo/repositories";
-            description = "Forgejo git repository directory";
+            example = "/srv/forgejo/repos";
+            description = "Forgejo git repositories directory.";
           };
 
-          port = lib.mkOption {
-            type = lib.types.port;
+          port = mkOption {
+            type = port;
             default = 3000;
-            description = "Forgejo port";
+            example = 9090;
+            description = "Forgejo service port.";
           };
 
-          settings = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
+          settings = mkOption {
+            type = attrsOf anything;
             default = { };
-            description = "Forgejo settings";
+            example = literalExpression ''
+              {
+                server = {
+                  DOMAIN = "forgejo.example.com";
+                  ROOT_URL = "https://forgejo.example.com/";
+                };
+
+                lfs.ENABLED = true;
+              }
+            '';
+            description = "Forgejo service settings.";
+          };
+
+          database = mkOption {
+            type = attrsOf anything;
+            default = { };
+            example = literalExpression ''
+              {
+                type = "postgres";
+                passwordFile = "/run/secrets/forgejo-postgres";
+              }
+            '';
+            description = "Forgejo database settings.";
           };
         };
 
@@ -54,18 +94,18 @@
             enable = true;
             stateDir = cfg.dataDir;
             repositoryRoot = cfg.repoDir;
+
             inherit (hl) user group;
+            inherit (cfg) database;
 
-            database.type = "sqlite3";
-
-            settings = lib.mkMerge [
-              (lib.mkDefault {
+            settings = mkMerge [
+              (mkDefault {
                 server = {
                   DOMAIN = hl.baseDomain;
                   ROOT_URL = "http://${hl.baseDomain}:${toString cfg.port}/";
                   HTTP_ADDR = "0.0.0.0";
                   HTTP_PORT = cfg.port;
-                  SSH_PORT = lib.head config.services.openssh.ports;
+                  SSH_PORT = head config.services.openssh.ports;
                 };
                 service.DISABLE_REGISTRATION = true;
                 session.COOKIE_SECURE = false;

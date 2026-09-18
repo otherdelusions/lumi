@@ -12,39 +12,87 @@
     nixos =
       { config, lib, ... }:
       let
+        inherit (lib)
+          mkOption
+          literalExpression
+          mkMerge
+          mkDefault
+          mkIf
+          ;
+
+        inherit (lib.types)
+          externalPath
+          attrsOf
+          anything
+          port
+          bool
+          ;
+
         hl = config.homelab;
         cfg = hl.services.copyparty;
       in
       {
         options.homelab.services.copyparty = {
-          settings = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
-            default = { };
-            description = "Copyparty settings";
+          dataDir = mkOption {
+            type = externalPath;
+            default = "${hl.dirs.data}/services/copyparty";
+            example = "/var/lib/copyparty";
+            description = "Copyparty data directory.";
           };
 
-          accounts = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
+          settings = mkOption {
+            type = attrsOf anything;
             default = { };
-            description = "Copyparty user accounts";
+            example = literalExpression ''
+              {
+                e2dsa = false;
+                chpw = true;
+                i = "127.0.0.1";
+              }
+            '';
+            description = "Additional copyparty settings.";
           };
 
-          volumes = lib.mkOption {
-            type = lib.types.attrsOf lib.types.anything;
+          accounts = mkOption {
+            type = attrsOf anything;
             default = { };
-            description = "Copyparty volume mapping and settings";
+            example = literalExpression ''
+              {
+                ed.passwordFile = "/run/secrets/party-pass";
+              }
+            '';
+            description = "Copyparty user accounts settings.";
           };
 
-          port = lib.mkOption {
-            type = lib.types.port;
+          volumes = mkOption {
+            type = attrsOf anything;
+            default = { };
+            example = literalExpression ''
+              {
+                "/" = {
+                  path = "/srv/copyparty";
+                  access = {
+                    A = "ed";
+                    r = "*";
+                  };
+                };
+              }
+            '';
+            description = "Copyparty volume mapping and settings.";
+          };
+
+          port = mkOption {
+            type = port;
             default = 3210;
-            description = "Copyparty port";
+            example = "8080";
+            description = "Copyparty service port.";
           };
 
-          openFirewall = lib.mkOption {
-            type = lib.types.bool;
+          openFirewall = mkOption {
+            type = bool;
             default = false;
-            description = "Whether to open the port in the firewall";
+            example = true;
+            description = "Whether to open the specified port in the firewall.";
           };
         };
 
@@ -57,21 +105,24 @@
             inherit (hl) user group;
             inherit (cfg) accounts volumes;
 
-            settings = lib.mkMerge [
-              (lib.mkDefault {
+            settings = mkMerge [
+              (mkDefault {
                 e2dsa = true;
                 e2tsr = true;
                 e2vu = true;
                 z = true;
                 i = "0.0.0.0";
                 no-reload = true;
+                localtime = true;
+                rotf-tz = hl.timeZone;
+                hist = cfg.dataDir;
               })
               cfg.settings
               { p = cfg.port; }
             ];
           };
 
-          networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.port ];
+          networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ cfg.port ];
         };
       };
   };
