@@ -12,7 +12,7 @@
           let
             defaults = {
               installation_mode = "force_installed";
-              default_area = "addon-bar";
+              default_area = "menupanel";
             };
           in
           {
