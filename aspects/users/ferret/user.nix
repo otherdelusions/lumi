@@ -1,6 +1,6 @@
 { den, ... }:
 {
-  den.aspects.delusion = {
+  den.aspects.ferret = {
     includes = [
       den.batteries.define-user
       den.batteries.primary-user

@@ -1,14 +1,14 @@
 {
   den.hosts.x86_64-linux = {
     ash = {
-      users.delusion = { };
+      users.ferret = { };
     };
 
     ember = {
       desktop.compositor = "niri";
       desktop.terminal = "foot";
 
-      users.delusion = { };
+      users.ferret = { };
     };
 
     interloper = { };

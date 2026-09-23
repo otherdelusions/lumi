@@ -1,7 +1,7 @@
 {
-  den.aspects.delusion = {
+  den.aspects.ferret = {
     nixos = { lib, ... }: {
-      # ssh keys for delusion
+      # ssh user keys
       sops.secrets =
         lib.genAttrs
           [
@@ -9,15 +9,15 @@
             "ssh_keys/to_ash"
           ]
           (_: {
-            sopsFile = ../../../secrets/users/delusion.yaml;
-            owner = "delusion";
+            sopsFile = ../../../secrets/users/ferret.yaml;
+            owner = "ferret";
           });
     };
 
     homeManager =
       { osConfig, ... }:
       {
-        # ssh auth config for delusion
+        # ssh user auth config
         programs.ssh.settings = {
           "github.com" = {
             User = "git";

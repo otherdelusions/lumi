@@ -1,12 +1,12 @@
 {
-  den.aspects.delusion = {
+  den.aspects.ferret = {
     homeManager =
       { inputs', ... }:
       {
         programs.librewolf.profiles = {
           default = {
             id = 0;
-            name = "default";
+            name = "ferret";
             isDefault = true;
 
             extensions = {

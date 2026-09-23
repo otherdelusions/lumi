@@ -10,7 +10,7 @@
       sops.secrets =
         lib.genAttrs
           [
-            "services/copyparty/delusion_pass"
+            "services/copyparty/ferret_pass"
           ]
           (_: {
             owner = config.homelab.user;
@@ -27,13 +27,13 @@
           openFirewall = true;
 
           accounts = {
-            delusion.passwordFile = config.sops.secrets."services/copyparty/delusion_pass".path;
+            ferret.passwordFile = config.sops.secrets."services/copyparty/ferret_pass".path;
           };
 
           volumes = {
             "/" = {
               path = "/mirror";
-              access.rwmda = [ "delusion" ];
+              access.rwmda = [ "ferret" ];
             };
           };
         };
