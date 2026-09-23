@@ -5,7 +5,6 @@
       with den.aspects;
       [
         dev
-        graphical
         tiling-wm
         laptop
         netsec
@@ -16,7 +15,7 @@
         netsec.clash-verge
       ];
 
-    nixos = {
+    nixos = { pkgs, ... }: {
       time.timeZone = "Europe/Moscow";
       networking.networkmanager.enable = true;
       nixpkgs.config.allowUnfree = true;
@@ -27,6 +26,18 @@
         enable = true;
         nssmdns4 = true;
       };
+
+      environment.systemPackages = with pkgs; [
+        loupe
+        papers
+        unzip
+        zip
+        (mpv.override {
+          scripts = with mpvScripts; [
+            thumbfast
+          ];
+        })
+      ];
     };
   };
 }

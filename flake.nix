@@ -71,14 +71,85 @@
 
   outputs =
     inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
-      inputs.import-tree [
-        ./aspects
-        ./modules
-        ./packages
-      ]
-      // {
-        debug = true;
-      }
-    );
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.den.flakeModule
+        inputs.git-hooks.flakeModule
+        inputs.treefmt-nix.flakeModule
+
+        (inputs.import-tree [
+          ./aspects
+          ./modules
+          ./packages
+        ])
+      ];
+
+      debug = true; # for nixd flake-parts expr
+
+      den.hosts.x86_64-linux = {
+        ash = {
+          users.ferret = { };
+        };
+
+        ember = {
+          desktop.compositor = "niri";
+          desktop.terminal = "foot";
+
+          users.ferret = { };
+        };
+
+        interloper = { };
+      };
+
+      perSystem =
+        {
+          pkgs,
+          config,
+          inputs',
+          ...
+        }:
+        {
+          treefmt.config = {
+            flakeCheck = false;
+
+            programs = {
+              nixfmt.enable = true;
+              yamlfmt.enable = true;
+            };
+          };
+
+          pre-commit.settings.hooks = {
+            actionlint.enable = true;
+
+            treefmt = {
+              enable = true;
+              package = config.treefmt.build.wrapper;
+            };
+
+            markdownlint = {
+              enable = true;
+              settings.configuration = {
+                MD013 = false;
+                MD033 = false;
+              };
+            };
+
+            convco.enable = true;
+          };
+
+          devShells.default = pkgs.mkShell {
+            name = "lumi";
+            inherit (config.pre-commit) shellHook;
+            NIX_CONFIG = "extra-experimental-features = nix-command flakes";
+            DIRENV_WARN_TIMEOUT = "0s";
+
+            packages = [
+              pkgs.just
+              pkgs.nurl
+              pkgs.caligula
+              inputs'.disko.packages.disko
+            ];
+          };
+        };
+    };
 }

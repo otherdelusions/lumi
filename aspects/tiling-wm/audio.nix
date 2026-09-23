@@ -1,8 +1,8 @@
 { den, ... }:
 {
-  den.aspects.graphical.includes = [ den.aspects.graphical.pipewire ];
+  den.aspects.tiling-wm.includes = [ den.aspects.tiling-wm.audio ];
 
-  den.aspects.graphical.pipewire = {
+  den.aspects.tiling-wm.audio = {
     nixos =
       { lib, config, ... }:
       {

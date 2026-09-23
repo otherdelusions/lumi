@@ -19,6 +19,14 @@
           inputs.stylix.nixosModules.stylix
         ];
 
+        fonts.enableDefaultPackages = true;
+
+        fonts.packages = with pkgs; [
+          noto-fonts
+          noto-fonts-cjk-sans
+          nerd-fonts.roboto-mono
+        ];
+
         stylix =
           let
             apple-fonts = inputs'.apple-fonts.packages;

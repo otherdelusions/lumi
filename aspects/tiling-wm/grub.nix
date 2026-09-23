@@ -1,8 +1,8 @@
 { den, ... }:
 {
-  den.aspects.graphical.includes = [ den.aspects.graphical.grub ];
+  den.aspects.tiling-wm.includes = [ den.aspects.tiling-wm.grub ];
 
-  den.aspects.graphical.grub = {
+  den.aspects.tiling-wm.grub = {
     nixos =
       { lib, ... }:
       {
