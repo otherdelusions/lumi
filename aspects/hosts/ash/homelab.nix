@@ -6,16 +6,7 @@
       services.copyparty
     ];
 
-    nixos = { lib, config, ... }: {
-      sops.secrets =
-        lib.genAttrs
-          [
-            "services/copyparty/ferret_pass"
-          ]
-          (_: {
-            owner = config.homelab.user;
-          });
-
+    nixos = { config, ... }: {
       homelab.dirs.content = "/mirror";
 
       homelab.dirs.extra = [
@@ -27,7 +18,7 @@
           openFirewall = true;
 
           accounts = {
-            ferret.passwordFile = config.sops.secrets."services/copyparty/ferret_pass".path;
+            ferret.passwordFile = config.security.nix-secrets.secrets."services/copyparty/ferret_pass".path;
           };
 
           volumes = {
