@@ -12,6 +12,7 @@
       }:
       let
         inherit (config.theme) fonts;
+        inherit (inputs'.nur.legacyPackages.repos.rycee) firefox-addons;
       in
       {
         programs.librewolf.profiles = lib.genAttrs config.theme.profileNames (_: {
@@ -24,7 +25,7 @@
           };
 
           extensions = {
-            packages = [ inputs'.firefox-addons.packages.firefox-color ];
+            packages = [ firefox-addons.firefox-color ];
 
             settings."FirefoxColor@mozilla.com".settings = {
               firstRunDone = true;

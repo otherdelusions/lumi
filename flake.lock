@@ -132,28 +132,6 @@
         "type": "github"
       }
     },
-    "firefox-addons": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "dir": "pkgs/firefox-addons",
-        "lastModified": 1787544136,
-        "narHash": "sha256-3XuvQ//tZzAjbgsyHm9VgIU2ZcaPgnqjkSl/Pu457Fg=",
-        "owner": "rycee",
-        "repo": "nur-expressions",
-        "rev": "3f3b777958a8aa9bd392d782e785b59b38d0548c",
-        "type": "gitlab"
-      },
-      "original": {
-        "dir": "pkgs/firefox-addons",
-        "owner": "rycee",
-        "repo": "nur-expressions",
-        "type": "gitlab"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -312,6 +290,29 @@
         "type": "indirect"
       }
     },
+    "nur": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791685787,
+        "narHash": "sha256-NWYRYgSLT42APxanyusRqERrmE6K/6QxrgvY2xTCB2w=",
+        "owner": "nix-community",
+        "repo": "NUR",
+        "rev": "e1fef13b4706602bd3ebe738f79b1491fb60bbf0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "NUR",
+        "type": "github"
+      }
+    },
     "ny": {
       "flake": false,
       "locked": {
@@ -330,13 +331,13 @@
         "copyparty": "copyparty",
         "den": "den",
         "disko": "disko",
-        "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "git-hooks": "git-hooks",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
         "nix-secrets": "nix-secrets",
         "nixpkgs": "nixpkgs_2",
+        "nur": "nur",
         "treefmt-nix": "treefmt-nix"
       }
     },
