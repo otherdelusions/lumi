@@ -59,11 +59,6 @@
           enable = true;
           restartIfChanged = true;
         };
-
-        enableCalendarEvents = false;
-        enableDynamicTheming = false;
-        enableClipboardPaste = false;
-        enableVPN = false;
       };
     };
   };
