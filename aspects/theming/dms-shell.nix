@@ -1,8 +1,8 @@
 { den, ... }:
 {
-  den.aspects.theming.stylix.includes = [ den.aspects.theming.stylix.dms-shell ];
+  den.aspects.theming.includes = [ den.aspects.theming.dms-shell ];
 
-  den.aspects.theming.stylix.dms-shell = {
+  den.aspects.theming.dms-shell = {
     homeManager =
       {
         config,
@@ -10,16 +10,25 @@
         pkgs,
         ...
       }:
-      {
+      lib.mkIf (config.programs ? dank-material-shell) {
+        programs.dank-material-shell.session = lib.mkIf (config.theme.wallPaper != null) {
+          wallpaperPath = config.theme.wallPaper;
+          wallpaperPathLight = config.theme.wallPaper;
+          wallpaperPathDark = config.theme.wallPaper;
+        };
+
         programs.dank-material-shell.settings = {
-          greeterFontFamily = config.stylix.fonts.sansSerif.name;
+          fontFamily = config.theme.fonts.sansSerif.name;
+          monoFontFamily = config.theme.fonts.monospace.name;
+          greeterFontFamily = config.theme.fonts.sansSerif.name;
           fontScale = 1.14;
 
+          currentThemeName = "custom";
           customThemeFile = lib.mkForce (
             let
-              inherit (config.lib.stylix) colors;
+              inherit (config.theme) colors;
               theme = with colors.withHashtag; {
-                name = "Stylix";
+                inherit (config.theme) name;
                 primary = base0B;
                 primaryText = base00;
                 primaryContainer = base0C;
@@ -40,7 +49,7 @@
                 info = base0C;
               };
             in
-            pkgs.writeText "dankMaterialShell-stylix-color-theme.json" (
+            pkgs.writeText "dankMaterialShell-${config.theme.name}-color-theme.json" (
               lib.toJSON {
                 dark = theme;
                 light = theme;

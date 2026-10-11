@@ -27,6 +27,14 @@
         nssmdns4 = true;
       };
 
+      fonts.enableDefaultPackages = true;
+
+      fonts.packages = with pkgs; [
+        noto-fonts
+        noto-fonts-cjk-sans
+        nerd-fonts.roboto-mono
+      ];
+
       environment.systemPackages = with pkgs; [
         loupe
         papers

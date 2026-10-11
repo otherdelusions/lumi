@@ -4,7 +4,7 @@
       { inputs', ... }:
       {
         programs.librewolf.profiles = {
-          default = {
+          ferret = {
             id = 0;
             name = "ferret";
             isDefault = true;

@@ -41,18 +41,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # sops-nix = {
-    #   url = "github:Mic92/sops-nix";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
     disko = {
       url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    stylix = {
-      url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

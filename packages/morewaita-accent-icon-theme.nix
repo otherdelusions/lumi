@@ -2,7 +2,7 @@
   perSystem =
     { pkgs, ... }:
     {
-      packages.morewaita-stylix-icon-theme = pkgs.callPackage (
+      packages.morewaita-accent-icon-theme = pkgs.callPackage (
         {
           stdenv,
           lib,
@@ -13,7 +13,7 @@
           accentColor ? "",
         }:
         let
-          variant = if accentColor == "" then "blue" else "stylix";
+          variant = if accentColor == "" then "blue" else "accent";
           accent = lib.removePrefix "#" accentColor;
 
           brighten = channel: lib.min 255 (lib.fromHexString channel * 135 / 100);
@@ -25,7 +25,7 @@
           ];
         in
         stdenv.mkDerivation {
-          pname = "morewaita-stylix-icon-theme";
+          pname = "morewaita-accent-icon-theme";
           version = "367849d";
 
           src = fetchFromGitHub {
@@ -52,11 +52,11 @@
             sed -i 's|recolor_svgs "\$variant" "\$theme_dir"|chmod -R u+w "$theme_dir"\n    &|' setup
             patchShebangs setup
           ''
-          + lib.optionalString (variant == "stylix") ''
+          + lib.optionalString (variant == "accent") ''
             # register accent as an extra color variant
-            echo 'COLOR_MAP[stylix]="3f8ae5:${accent} 438de6:${accent} 62a0ea:${accent} a4caee:${highlight} afd4ff:${highlight} c0d5ea:${highlight}"' >> variants.conf
-            sed -i 's/^ALL_VARIANTS=(\(.*\))/ALL_VARIANTS=(\1 stylix)/' variants.conf
-            cp -r mimetypes/blue mimetypes/stylix
+            echo 'COLOR_MAP[accent]="3f8ae5:${accent} 438de6:${accent} 62a0ea:${accent} a4caee:${highlight} afd4ff:${highlight} c0d5ea:${highlight}"' >> variants.conf
+            sed -i 's/^ALL_VARIANTS=(\(.*\))/ALL_VARIANTS=(\1 accent)/' variants.conf
+            cp -r mimetypes/blue mimetypes/accent
           '';
 
           installPhase = ''

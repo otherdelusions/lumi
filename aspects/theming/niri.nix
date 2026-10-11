@@ -1,20 +1,20 @@
 { den, ... }:
 {
-  den.aspects.theming.stylix.includes = [ den.aspects.theming.stylix.niri ];
+  den.aspects.theming.includes = [ den.aspects.theming.niri ];
 
-  den.aspects.theming.stylix.niri = {
+  den.aspects.theming.niri = {
     homeManager = { config, ... }: {
       wayland.windowManager.niri.settings =
         let
-          inherit (config.lib.stylix) colors;
+          inherit (config.theme) colors;
         in
         {
           layout.background-color = colors.withHashtag.base00;
           overview.backdrop-color = colors.withHashtag.base00;
 
           cursor = {
-            xcursor-theme = config.stylix.cursor.name;
-            xcursor-size = config.stylix.cursor.size;
+            xcursor-theme = config.theme.cursor.name;
+            xcursor-size = config.theme.cursor.size;
           };
 
           layout.border = {

@@ -14,6 +14,7 @@
         programs.fish = {
           shellAliases = {
             ls = "ls -A --color=auto --group-directories-first";
+            testing = "echo '${config.theme.colors.withHashtag.base01}'";
           };
 
           interactiveShellInit = ''
