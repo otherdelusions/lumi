@@ -10,14 +10,14 @@
         pkgs,
         ...
       }:
-      lib.mkIf (config.programs ? dank-material-shell) {
-        programs.dank-material-shell.session = lib.mkIf (config.theme.wallPaper != null) {
+      lib.mkIf (config.programs ? dms-shell) {
+        programs.dms-shell.session = lib.mkIf (config.theme.wallPaper != null) {
           wallpaperPath = config.theme.wallPaper;
           wallpaperPathLight = config.theme.wallPaper;
           wallpaperPathDark = config.theme.wallPaper;
         };
 
-        programs.dank-material-shell.settings = {
+        programs.dms-shell.settings = {
           fontFamily = config.theme.fonts.sansSerif.name;
           monoFontFamily = config.theme.fonts.monospace.name;
           greeterFontFamily = config.theme.fonts.sansSerif.name;
