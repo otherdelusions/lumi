@@ -8,8 +8,9 @@ _pre:
 
 [doc('Rebuild the current host (or supply a different config to build). Use -b or --boot to boot instead of switching')]
 [arg("action", long="boot", short="b", value="boot")]
-rebuild target=shell('hostname') action='switch': _pre
-    sudo nixos-rebuild {{action}} --flake .#{{target}}
+[arg("mode", long="offline", short="o", value="--offline")]
+rebuild target=shell('hostname') action='switch' mode='': _pre
+    sudo nixos-rebuild {{action}} --flake .#{{target}} {{mode}}
 
 [doc('Update all flake inputs')]
 update:
