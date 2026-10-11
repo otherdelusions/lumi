@@ -74,6 +74,8 @@
           "browser.newtabpage.activity-stream.showSearch" = false;
           "browser.newtabpage.activity-stream.hideLogo" = true;
           "browser.newtabpage.activity-stream.feeds.topsites" = false;
+          "browser.uidensity" = 1;
+          "browser.nova.enabled" = false;
           "network.cookie.cookieBehavior" = 1;
           "network.lna.blocking" = true;
           "network.lna.block_trackers" = true;
