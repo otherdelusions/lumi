@@ -16,6 +16,7 @@
         };
 
         colors = config.theme.colors.withHashtag;
+        inherit (config.theme.colors) withRgb;
 
         css = ''
           @define-color base00 ${colors.base00};
@@ -63,7 +64,7 @@
 
           @define-color headerbar_bg_color @base01;
           @define-color headerbar_fg_color @base05;
-          @define-color headerbar_border_color alpha(@base01, 0.7);
+          @define-color headerbar_border_color rgba(${toString withRgb.base01.r}, ${toString withRgb.base01.g}, ${toString withRgb.base01.b}, 0.7);
           @define-color headerbar_backdrop_color @window_bg_color;
           @define-color headerbar_shade_color rgba(0, 0, 0, 0.07);
           @define-color headerbar_darker_shade_color rgba(0, 0, 0, 0.07);
