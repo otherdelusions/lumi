@@ -27,6 +27,10 @@
           base0F = "61ccb6";
         };
 
+        supportedBrowsers = [
+          "librewolf"
+        ];
+
         inherit (lib) mkOption mapAttrs genAttrs;
         inherit (lib.types)
           int
@@ -145,10 +149,12 @@
             };
           };
 
-          profileNames = mkOption {
-            type = listOf str;
-            default = [ ];
-          };
+          browser = genAttrs supportedBrowsers (_: {
+            profileNames = mkOption {
+              type = listOf str;
+              default = [ ];
+            };
+          });
         };
       };
   };

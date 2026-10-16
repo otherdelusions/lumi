@@ -25,7 +25,7 @@
               };
             };
 
-            profileNames = [ "ferret" ];
+            browser.librewolf.profileNames = [ "ferret" ];
           };
       };
     })

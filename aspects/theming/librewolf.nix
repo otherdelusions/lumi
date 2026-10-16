@@ -15,7 +15,7 @@
         inherit (inputs'.nur.legacyPackages.repos.rycee) firefox-addons;
       in
       {
-        programs.librewolf.profiles = lib.genAttrs config.theme.profileNames (_: {
+        programs.librewolf.profiles = lib.genAttrs config.theme.browser.librewolf.profileNames (_: {
           settings = {
             "font.name.monospace.x-western" = fonts.monospace.name;
             "font.name.sans-serif.x-western" = fonts.sansSerif.name;
