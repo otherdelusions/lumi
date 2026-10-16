@@ -18,7 +18,6 @@
         systemd.network.wait-online.enable = false;
 
         systemd.services.systemd-networkd.stopIfChanged = false;
-        systemd.services.systemd-resolved.stopIfChanged = false;
       };
   };
 }

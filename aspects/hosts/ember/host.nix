@@ -16,17 +16,15 @@
       ];
 
     nixos = { pkgs, ... }: {
-      time.timeZone = "Europe/Moscow";
       networking.networkmanager.enable = true;
-      nixpkgs.config.allowUnfree = true;
-
-      documentation.man.cache.enable = false;
 
       services.avahi = {
         enable = true;
         nssmdns4 = true;
       };
 
+      time.timeZone = "Europe/Moscow";
+      documentation.man.cache.enable = false;
       environment.systemPackages = with pkgs; [
         loupe
         papers
@@ -37,6 +35,8 @@
             thumbfast
           ];
         })
+        bubblewrap
+        mcp-nixos
       ];
     };
   };
