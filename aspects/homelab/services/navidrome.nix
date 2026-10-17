@@ -15,7 +15,6 @@
         inherit (lib)
           mkOption
           literalExpression
-          mkMerge
           mkDefault
           ;
 
@@ -59,9 +58,17 @@
         };
 
         config = {
+          homelab.services.navidrome.settings = {
+            DataFolder = mkDefault cfg.dataDir;
+            MusicFolder = mkDefault cfg.musicDir;
+            Address = mkDefault "0.0.0.0";
+            DefaultDownsamplingFormat = mkDefault "aac";
+            EnableInsightsCollector = mkDefault false;
+          };
+
           systemd.services.navidrome.unitConfig.RequiresMountsFor = [
-            "${cfg.dataDir}"
-            "${cfg.musicDir}"
+            config.services.navidrome.settings.DataFolder
+            config.services.navidrome.settings.MusicFolder
           ];
 
           services.navidrome = {
@@ -69,18 +76,7 @@
             openFirewall = true;
 
             inherit (hl) user group;
-
-            settings = mkMerge [
-              (mkDefault {
-                DataFolder = cfg.dataDir;
-                MusicFolder = cfg.musicDir;
-                Address = "0.0.0.0";
-                DefaultDownsamplingFormat = "aac";
-                EnableInsightsCollector = false;
-              })
-
-              cfg.settings
-            ];
+            inherit (cfg) settings;
           };
         };
       };

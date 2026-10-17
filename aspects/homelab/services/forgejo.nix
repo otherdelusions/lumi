@@ -15,7 +15,6 @@
         inherit (lib)
           mkOption
           literalExpression
-          mkMerge
           mkDefault
           head
           ;
@@ -83,11 +82,22 @@
         };
 
         config = {
-          networking.firewall.allowedTCPPorts = [ cfg.port ];
+          homelab.services.forgejo.settings = {
+            server = {
+              DOMAIN = mkDefault hl.baseDomain;
+              HTTP_ADDR = mkDefault "0.0.0.0";
+              HTTP_PORT = mkDefault cfg.port;
+              SSH_PORT = mkDefault (head config.services.openssh.ports);
+            };
+            service.DISABLE_REGISTRATION = mkDefault true;
+            session.COOKIE_SECURE = mkDefault false;
+          };
+
+          networking.firewall.allowedTCPPorts = [ config.services.forgejo.settings.server.HTTP_PORT ];
 
           systemd.services.forgejo.unitConfig.RequiresMountsFor = [
-            "${cfg.dataDir}"
-            "${cfg.repoDir}"
+            config.services.forgejo.stateDir
+            config.services.forgejo.repositoryRoot
           ];
 
           services.forgejo = {
@@ -95,24 +105,7 @@
             stateDir = cfg.dataDir;
             repositoryRoot = cfg.repoDir;
 
-            inherit (hl) user group;
-            inherit (cfg) database;
-
-            settings = mkMerge [
-              (mkDefault {
-                server = {
-                  DOMAIN = hl.baseDomain;
-                  ROOT_URL = "http://${hl.baseDomain}:${cfg.port}/";
-                  HTTP_ADDR = "0.0.0.0";
-                  HTTP_PORT = cfg.port;
-                  SSH_PORT = head config.services.openssh.ports;
-                };
-                service.DISABLE_REGISTRATION = true;
-                session.COOKIE_SECURE = false;
-              })
-
-              cfg.settings
-            ];
+            inherit (cfg) database settings;
           };
         };
       };

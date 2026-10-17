@@ -20,7 +20,6 @@
         inherit (lib)
           mkOption
           literalExpression
-          mkMerge
           mkDefault
           ;
 
@@ -110,25 +109,23 @@
         };
 
         config = {
+          homelab.services.monbooru.settings = {
+            galleries = mkDefault cfg.galleries;
+            server = {
+              bind_address = mkDefault cfg.bindAddress;
+              base_url = mkDefault cfg.baseUrl;
+            };
+          };
+
           homelab.dirs.extra = map (g: g.gallery_path) config.services.monbooru.settings.galleries;
 
           services.monbooru = {
             enable = true;
             openFirewall = true;
+            package = mkDefault inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.monbooru;
 
             inherit (hl) user group timeZone;
-            inherit (cfg) passwordFile dataDir;
-
-            settings = mkMerge [
-              {
-                galleries = mkDefault cfg.galleries;
-                server = {
-                  bind_address = mkDefault cfg.bindAddress;
-                  base_url = mkDefault cfg.baseUrl;
-                };
-              }
-              cfg.settings
-            ];
+            inherit (cfg) passwordFile dataDir settings;
           };
         };
       };

@@ -15,9 +15,8 @@
         inherit (lib)
           mkOption
           literalExpression
-          optionals
+          optional
           optionalAttrs
-          mkMerge
           mkDefault
           ;
 
@@ -31,6 +30,11 @@
 
         hl = config.homelab;
         cfg = hl.services.suwayomi;
+        serviceCfg = config.services.suwayomi-server;
+        mediaDirs = [
+          serviceCfg.settings.server.localSourcePath
+        ]
+        ++ optional (serviceCfg.settings.server ? downloadsPath) serviceCfg.settings.server.downloadsPath;
       in
       {
         options.homelab.services.suwayomi = {
@@ -71,14 +75,25 @@
         };
 
         config = {
+          homelab.services.suwayomi.settings = {
+            port = mkDefault cfg.port;
+            systemTrayEnabled = mkDefault false;
+            initialOpenInBrowserEnabled = mkDefault false;
+            backupInterval = mkDefault 0;
+            globalUpdateInterval = mkDefault 0;
+            authMode = mkDefault "NONE";
+            opdsEnablePageReadProgress = mkDefault false;
+          }
+          // optionalAttrs (cfg.mangaDir != null) {
+            downloadsPath = mkDefault "${cfg.mangaDir}/downloads";
+            localSourcePath = mkDefault "${cfg.mangaDir}/local";
+          };
+
           homelab.dirs.extra = [
-            "${cfg.dataDir}"
-            "${cfg.dataDir}/.local/share"
+            serviceCfg.dataDir
+            "${serviceCfg.dataDir}/.local/share"
           ]
-          ++ optionals (cfg.mangaDir != null) [
-            "${cfg.mangaDir}/local"
-            "${cfg.mangaDir}/downloads"
-          ];
+          ++ mediaDirs;
 
           services.suwayomi-server = {
             enable = true;
@@ -87,42 +102,19 @@
             inherit (hl) user group;
             inherit (cfg) dataDir;
 
-            settings = mkMerge [
-              (mkDefault {
-                server = {
-                  inherit (cfg) port;
-                  systemTrayEnabled = false;
-                  initialOpenInBrowserEnabled = false;
-                  backupInterval = 0;
-                  globalUpdateInterval = 0;
-                  authMode = "NONE";
-                  opdsEnablePageReadProgress = false;
-                }
-                // optionalAttrs (cfg.mangaDir != null) {
-                  downloadsPath = "${cfg.mangaDir}/downloads";
-                  localSourcePath = "${cfg.mangaDir}/local";
-                };
-              })
-              cfg.settings
-            ];
+            settings.server = cfg.settings;
           };
 
           systemd.services.suwayomi-server = {
-            unitConfig.RequiresMountsFor = [
-              "${cfg.dataDir}"
-            ]
-            ++ optionals (cfg.mangaDir != null) [ "${cfg.mangaDir}" ];
+            unitConfig.RequiresMountsFor = [ serviceCfg.dataDir ] ++ mediaDirs;
 
             environment = {
-              HOME = cfg.dataDir;
-              JAVA_TOOL_OPTIONS = "-Duser.home=${cfg.dataDir}";
+              HOME = serviceCfg.dataDir;
+              JAVA_TOOL_OPTIONS = "-Duser.home=${serviceCfg.dataDir}";
             };
 
             serviceConfig = {
-              ReadWritePaths = [
-                "${cfg.dataDir}"
-              ]
-              ++ optionals (cfg.mangaDir != null) [ "${cfg.mangaDir}" ];
+              ReadWritePaths = [ serviceCfg.dataDir ] ++ mediaDirs;
             };
           };
         };

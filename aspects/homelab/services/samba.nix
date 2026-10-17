@@ -15,7 +15,6 @@
         inherit (lib)
           mkOption
           literalExpression
-          mkMerge
           mkDefault
           mapAttrs
           ;
@@ -80,6 +79,27 @@
         };
 
         config = {
+          homelab.services.samba = {
+            global = {
+              workgroup = mkDefault "WORKGROUP";
+              "server string" = mkDefault config.networking.hostName;
+              "netbios name" = mkDefault config.networking.hostName;
+              security = mkDefault "user";
+              "invalid users" = mkDefault [ "root" ];
+              "guest account" = mkDefault "nobody";
+              "map to guest" = mkDefault "bad user";
+              "passdb backend" = mkDefault "tdbsam";
+            };
+
+            common = {
+              browseable = mkDefault "yes";
+              "read only" = mkDefault "no";
+              "guest ok" = mkDefault "no";
+              "create mask" = mkDefault "0644";
+              "directory mask" = mkDefault "0755";
+            };
+          };
+
           # wsd discovery
           networking.firewall = {
             allowedTCPPorts = [ 5357 ];
@@ -91,33 +111,9 @@
             openFirewall = true;
 
             settings = {
-              global = mkMerge [
-                (mkDefault {
-                  workgroup = "WORKGROUP";
-                  "server string" = config.networking.hostName;
-                  "netbios name" = config.networking.hostName;
-                  "security" = "user";
-                  "invalid users" = [ "root" ];
-                  "guest account" = "nobody";
-                  "map to guest" = "bad user";
-                  "passdb backend" = "tdbsam";
-                })
-                cfg.global
-              ];
+              inherit (cfg) global;
             }
-            // mapAttrs (
-              _: value:
-              {
-                browseable = "yes";
-                "read only" = "no";
-                writeable = "yes";
-                "guest ok" = "no";
-                "create mask" = "0644";
-                "directory mask" = "0755";
-              }
-              // cfg.common
-              // value
-            ) cfg.shares;
+            // mapAttrs (_: value: cfg.common // value) cfg.shares;
           };
 
           services.samba-wsdd = {
