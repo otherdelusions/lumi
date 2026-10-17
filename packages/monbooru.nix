@@ -4,16 +4,18 @@
     {
       packages.monbooru = pkgs.callPackage (
         {
-          version ? "1.19.1",
-          buildGoModule,
+          version ? "1.22.2",
+          buildGo127Module,
           fetchFromGitHub,
           makeWrapper,
           ffmpeg,
+          xdg-utils,
           lib,
           withTagger ? false,
-          onnxruntime ? null,
+          withDesktop ? false,
+          onnxruntime,
         }:
-        buildGoModule {
+        buildGo127Module {
           pname = "monbooru";
           inherit version;
 
@@ -21,29 +23,50 @@
             owner = "monbooru";
             repo = "monbooru";
             rev = "v${version}";
-            hash = "sha256-Onhi5g3vva3tQIwHe2CaQw7vTQyDO1SMQMRvG03SiEQ=";
+            hash = "sha256-H/ZAaN1b8w+rxqMCJ3Ree4DExk1/hQKJMt+joUbcDEQ=";
           };
 
-          vendorHash = "sha256-tl8KidBWyX382Kd0YYJ1+AniTgGuTCISewdbq4IFNvE=";
+          vendorHash = "sha256-8jDbVEdc6NvrqHkDzGv3knGMUKsDAKleb1qVABjH3tA=";
           subPackages = [ "cmd/monbooru" ];
 
           tags = lib.optional withTagger "tagger";
           env.CGO_ENABLED = if withTagger then 1 else 0;
+
+          postPatch = lib.optionalString withDesktop ''
+            # Autostart must use the wrapper, which supplies FFmpeg and ONNX Runtime.
+            substituteInPlace internal/shared/desktop/integration.go \
+              --replace-fail 'exe := Program()' 'exe := "${placeholder "out"}/bin/monbooru"'
+            substituteInPlace internal/shared/desktop/integration_linux.go \
+              --replace-fail '[]string{"/usr/", "/opt/"}' '[]string{"/usr/", "/opt/", "${builtins.storeDir}/"}'
+          '';
 
           ldflags = [
             "-s"
             "-w"
             "-X github.com/monbooru/monbooru/internal/web.Version=${version}"
             "-X github.com/monbooru/monbooru/internal/web.RepoURL=https://github.com/monbooru/monbooru"
-            "-X github.com/monbooru/monbooru/internal/web.RepoURL=https://monbooru.github.io/mondocs/index.html"
-          ];
+            "-X github.com/monbooru/monbooru/internal/web.DocURL=https://monbooru.github.io/mondocs/index.html"
+            "-X github.com/monbooru/monbooru/internal/web.Package=nix"
+          ]
+          ++ lib.optional withDesktop "-X main.defaultDesktop=true";
 
           nativeBuildInputs = [ makeWrapper ];
 
           postInstall = ''
             wrapProgram $out/bin/monbooru \
-            --prefix PATH : ${lib.makeBinPath [ ffmpeg ]} \
-            ${lib.optionalString withTagger "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ onnxruntime ]}"}
+              --prefix PATH : ${
+                lib.makeBinPath ([ (ffmpeg.override { withJxl = true; }) ] ++ lib.optional withDesktop xdg-utils)
+              } \
+              ${lib.optionalString withTagger "--set-default ORT_LIB_PATH ${lib.getLib onnxruntime}/lib/libonnxruntime.so"}
+          ''
+          + lib.optionalString withDesktop ''
+            install -Dm644 packaging/monbooru.desktop $out/share/applications/monbooru.desktop
+            substituteInPlace $out/share/applications/monbooru.desktop \
+              --replace-fail 'Exec=monbooru' "Exec=$out/bin/monbooru"
+            for size in 48 64 128 256; do
+              install -Dm644 packaging/icons/monbooru-$size.png \
+                $out/share/icons/hicolor/''${size}x$size/apps/monbooru.png
+            done
           '';
 
           doCheck = false;
@@ -51,7 +74,7 @@
             description = "Self-hosted, booru-style gallery";
             homepage = "https://github.com/monbooru/monbooru";
             changelog = "https://github.com/monbooru/monbooru/blob/v${version}/CHANGELOG.md";
-            licence = lib.licenses.agpl3Only;
+            license = lib.licenses.agpl3Only;
             maintainers = [ ];
             mainProgram = "monbooru";
           };

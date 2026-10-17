@@ -224,7 +224,7 @@
               User = cfg.user;
               Group = cfg.group;
               WorkingDirectory = cfg.dataDir;
-              ExecStart = "${getExe cfg.package} -config ${configFile}";
+              ExecStart = "${getExe cfg.package} -desktop=false -config ${configFile}";
               Restart = "on-failure";
               RestartSec = "5s";
 
