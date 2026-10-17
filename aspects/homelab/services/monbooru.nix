@@ -110,22 +110,23 @@
         };
 
         config = {
-          homelab.dirs.extra = map (g: g.path) cfg.galleries;
+          homelab.dirs.extra = map (g: g.gallery_path) config.services.monbooru.settings.galleries;
 
           services.monbooru = {
             enable = true;
             openFirewall = true;
 
             inherit (hl) user group timeZone;
-            inherit (cfg) passwordFile;
+            inherit (cfg) passwordFile dataDir;
 
             settings = mkMerge [
-              (mkDefault {
+              {
+                galleries = mkDefault cfg.galleries;
                 server = {
-                  bind_address = cfg.bindAddress;
-                  base_url = cfg.baseUrl;
+                  bind_address = mkDefault cfg.bindAddress;
+                  base_url = mkDefault cfg.baseUrl;
                 };
-              })
+              }
               cfg.settings
             ];
           };

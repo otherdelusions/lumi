@@ -15,7 +15,6 @@
         inherit (lib)
           mkOption
           literalExpression
-          mkMerge
           mkDefault
           mkIf
           ;
@@ -99,28 +98,37 @@
         imports = [ inputs.copyparty.nixosModules.default ];
 
         config = {
+          homelab.services.copyparty.settings = {
+            e2dsa = mkDefault true;
+            e2tsr = mkDefault true;
+            e2vu = mkDefault true;
+            z = mkDefault true;
+            i = mkDefault "0.0.0.0";
+            no-reload = mkDefault true;
+            localtime = mkDefault true;
+            rotf-tz = mkDefault hl.timeZone;
+            hist = mkDefault cfg.dataDir;
+          };
+
           services.copyparty = {
             enable = true;
 
             inherit (hl) user group;
             inherit (cfg) accounts volumes;
 
-            settings = mkMerge [
-              (mkDefault {
-                e2dsa = true;
-                e2tsr = true;
-                e2vu = true;
-                z = true;
-                i = "0.0.0.0";
-                no-reload = true;
-                localtime = true;
-                rotf-tz = hl.timeZone;
-                hist = cfg.dataDir;
-              })
-              cfg.settings
-              { p = cfg.port; }
-            ];
+            settings = cfg.settings // {
+              p = cfg.port;
+            };
           };
+
+          systemd.tmpfiles.settings.copyparty-history =
+            lib.optionalAttrs (config.services.copyparty.settings ? hist)
+              {
+                "${config.services.copyparty.settings.hist}".d = {
+                  mode = "0750";
+                  inherit (config.services.copyparty) user group;
+                };
+              };
 
           networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ cfg.port ];
         };
