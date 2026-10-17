@@ -3,40 +3,37 @@
   den.aspects.dev.helix.includes = [ den.aspects.dev.helix.languages ];
 
   den.aspects.dev.helix.languages = {
-    homeManager = { host, ... }: {
-      programs.helix.languages =
-        let
-          flake = "(builtins.getFlake (builtins.toString ./.))";
-          nixosExpr = "${flake}.nixosConfigurations.${host.hostName}.options";
-        in
-        {
-          language-server = {
-            gopls.config = {
-              gofumpt = true;
-              "ui.diagnostic.staticcheck" = true;
-            };
-
-            nixd.config.nixd = {
-              nixpkgs.expr = "import ${flake}.inputs.nixpkgs { }";
-              formatting.command = [ "nixfmt" ];
-
-              options = {
-                nixos.expr = nixosExpr;
-                flake-parts.expr = "${flake}.debug.options";
-                flake-parts-perSystem.expr = "${flake}.currentSystem.options";
-              };
-            };
+    homeManager = { ... }: {
+      programs.helix.languages = {
+        language-server = {
+          gopls.config = {
+            gofumpt = true;
+            staticcheck = true;
           };
 
-          language = [
-            {
-              name = "github-action";
-              auto-format = true;
-              formatter.command = "yamlfmt";
-              formatter.args = [ "-" ];
-            }
-          ];
+          nixd.config.nixd.formatting.command = [ "nixfmt" ];
         };
+
+        language = [
+          {
+            name = "nix";
+            language-servers = [ "nixd" ];
+            auto-format = true;
+            formatter.command = "nixfmt";
+          }
+          {
+            name = "go";
+            language-servers = [ "gopls" ];
+            auto-format = true;
+          }
+          {
+            name = "github-action";
+            auto-format = true;
+            formatter.command = "yamlfmt";
+            formatter.args = [ "-" ];
+          }
+        ];
+      };
     };
   };
 }

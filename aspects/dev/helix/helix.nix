@@ -24,8 +24,6 @@
             nixfmt
             yamlfmt
             gopls
-            golangci-lint
-            golangci-lint-langserver
           ];
         };
 

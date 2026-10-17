@@ -142,6 +142,8 @@
             DIRENV_WARN_TIMEOUT = "0s";
 
             packages = [
+              pkgs.nixd
+              pkgs.nixfmt
               pkgs.just
               pkgs.nurl
               pkgs.caligula
