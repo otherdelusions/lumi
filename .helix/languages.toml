@@ -1,3 +1,4 @@
+# :workspace-trust to load those
 [language-server.nixd.config.nixd.nixpkgs]
 expr = 'import (builtins.getFlake (toString ./.)).inputs.nixpkgs { }'
 
