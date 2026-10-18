@@ -35,6 +35,7 @@
 
           alias = {
             l = "log --oneline --graph";
+            changes = "diff --stat --patch HEAD";
             cm = "commit -m";
             lock = "!git restore --staged . && git add flake.lock && git chore flake \"update flake.lock\"";
             chore = "!f() { git commit -m \"chore\${1:+($1)}: $2\" \${3:+-m \"$3\"}; }; f";
@@ -51,6 +52,15 @@
         ignores = [
           ".direnv"
         ];
+      };
+
+      programs.delta = {
+        enable = true;
+        enableGitIntegration = true;
+        options = {
+          navigate = true;
+          line-numbers = true;
+        };
       };
     };
   };
