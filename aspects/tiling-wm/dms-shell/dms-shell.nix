@@ -3,7 +3,7 @@
   den.aspects.tiling-wm.includes = [ den.aspects.tiling-wm.dms-shell ];
 
   den.aspects.tiling-wm.dms-shell = {
-    homeManager =
+    provides.to-users.homeManager =
       {
         pkgs,
         lib,

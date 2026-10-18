@@ -3,7 +3,7 @@
   den.aspects.tiling-wm.niri.includes = [ den.aspects.tiling-wm.niri.env ];
 
   den.aspects.tiling-wm.niri.env = {
-    homeManager =
+    provides.to-users.homeManager =
       { lib, ... }:
       {
         wayland.windowManager.niri.settings.environment = {

@@ -20,7 +20,7 @@
         ];
       };
 
-    homeManager = {
+    provides.to-users.homeManager = {
       wayland.windowManager.niri = {
         enable = true;
         xwaylandSatellitePackage = null;

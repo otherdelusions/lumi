@@ -3,7 +3,7 @@
   den.aspects.tiling-wm.includes = [ den.aspects.tiling-wm.foot ];
 
   den.aspects.tiling-wm.foot = {
-    homeManager =
+    provides.to-users.homeManager =
       { host, ... }:
       {
         programs.foot = {

@@ -3,7 +3,7 @@
   den.aspects.theming.includes = [ den.aspects.theming.fonts ];
 
   den.aspects.theming.fonts = {
-    homeManager = { config, lib, ... }: {
+    provides.to-users.homeManager = { config, lib, ... }: {
       home.packages = with config.theme.fonts; [
         monospace.package
         sansSerif.package

@@ -3,7 +3,7 @@
   den.aspects.dev.includes = [ den.aspects.dev.direnv ];
 
   den.aspects.dev.direnv = {
-    nixos =
+    provides.to-hosts.nixos =
       { lib, ... }:
       {
         programs.direnv = {

@@ -4,9 +4,14 @@
     ./_docs.nix
   ];
 
-  den.aspects.homelab = { user }: {
+  den.aspects.homelab = {
     nixos =
-      { lib, config, ... }:
+      {
+        host,
+        lib,
+        config,
+        ...
+      }:
       let
         inherit (lib)
           mkOption
@@ -19,6 +24,7 @@
           ;
 
         hl = config.homelab;
+        isHostUser = lib.any (user: user.userName == hl.user) (builtins.attrValues host.users);
       in
       {
         options.homelab = {
@@ -55,15 +61,17 @@
           users = {
             groups.${hl.group}.gid = 1500;
 
-            users.${hl.user} = mkIf (hl.user != user.userName) {
+            users.${hl.user} = mkIf (!isHostUser) {
               isSystemUser = true;
               uid = 1500;
               inherit (hl) group;
             };
           };
-
-          users.users.${user.userName}.extraGroups = [ hl.group ];
         };
       };
+
+    provides.to-users.user = { osConfig, ... }: {
+      extraGroups = [ osConfig.homelab.group ];
+    };
   };
 }

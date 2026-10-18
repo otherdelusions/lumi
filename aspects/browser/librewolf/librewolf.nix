@@ -9,6 +9,6 @@
       };
     };
 
-    homeManager.programs.librewolf.enable = true;
+    provides.to-users.homeManager.programs.librewolf.enable = true;
   };
 }

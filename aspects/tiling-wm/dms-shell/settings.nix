@@ -3,7 +3,7 @@
   den.aspects.tiling-wm.dms-shell.includes = [ den.aspects.tiling-wm.dms-shell.settings ];
 
   den.aspects.tiling-wm.dms-shell.settings = {
-    homeManager = {
+    provides.to-users.homeManager = {
       programs.dms-shell.settings = {
         widgetBackgroundColor = "sth";
         cornerRadius = 0;

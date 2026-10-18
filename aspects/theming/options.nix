@@ -1,6 +1,6 @@
 {
   den.aspects.theming = {
-    homeManager =
+    provides.to-users.homeManager =
       {
         config,
         lib,

@@ -3,7 +3,7 @@
   den.aspects.theming.includes = [ den.aspects.theming.dms-shell ];
 
   den.aspects.theming.dms-shell = {
-    homeManager =
+    provides.to-users.homeManager =
       {
         config,
         lib,

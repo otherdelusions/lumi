@@ -3,7 +3,7 @@
   den.aspects.theming.includes = [ den.aspects.theming.librewolf ];
 
   den.aspects.theming.librewolf = {
-    homeManager =
+    provides.to-users.homeManager =
       {
         lib,
         config,

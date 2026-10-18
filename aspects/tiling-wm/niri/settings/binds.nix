@@ -3,7 +3,7 @@
   den.aspects.tiling-wm.niri.includes = [ den.aspects.tiling-wm.niri.binds ];
 
   den.aspects.tiling-wm.niri.binds = {
-    homeManager =
+    provides.to-users.homeManager =
       {
         host,
         config,

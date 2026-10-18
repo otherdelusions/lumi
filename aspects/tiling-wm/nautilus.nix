@@ -27,7 +27,7 @@
         };
       };
 
-    homeManager =
+    provides.to-users.homeManager =
       { lib, config, ... }:
       {
         xdg.userDirs.enable = lib.mkDefault true;

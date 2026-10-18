@@ -3,7 +3,7 @@
   den.aspects.theming.includes = [ den.aspects.theming.helix ];
 
   den.aspects.theming.helix = {
-    homeManager =
+    provides.to-users.homeManager =
       { config, ... }:
       let
         inherit (config.theme.colors.withHashtag)

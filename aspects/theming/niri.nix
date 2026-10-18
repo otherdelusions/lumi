@@ -3,7 +3,7 @@
   den.aspects.theming.includes = [ den.aspects.theming.niri ];
 
   den.aspects.theming.niri = {
-    homeManager = { config, ... }: {
+    provides.to-users.homeManager = { config, ... }: {
       wayland.windowManager.niri.settings =
         let
           inherit (config.theme) colors;

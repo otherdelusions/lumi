@@ -3,7 +3,7 @@
   den.aspects.theming.includes = [ den.aspects.theming.foot ];
 
   den.aspects.theming.foot = {
-    homeManager =
+    provides.to-users.homeManager =
       { config, ... }:
       let
         inherit (config.theme) colors;

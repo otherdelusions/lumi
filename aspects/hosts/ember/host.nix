@@ -4,7 +4,6 @@
     includes =
       with den.aspects;
       [
-        dev
         tiling-wm
         laptop
         netsec
