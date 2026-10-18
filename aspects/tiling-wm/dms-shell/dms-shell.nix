@@ -28,18 +28,6 @@
           };
         };
 
-        imports = [
-          # aliases for those who think we still use dms module
-          (lib.mkAliasOptionModule
-            [ "programs" "dank-material-shell" "settings" ]
-            [ "programs" "dms-shell" "settings" ]
-          )
-          (lib.mkAliasOptionModule
-            [ "programs" "dank-material-shell" "session" ]
-            [ "programs" "dms-shell" "session" ]
-          )
-        ];
-
         config = {
           xdg.stateFile."DankMaterialShell/session.json" = lib.mkIf (cfg.session != { }) {
             source = jsonFormat.generate "session.json" cfg.session;
@@ -51,15 +39,6 @@
         };
       };
 
-    nixos = { host, ... }: {
-      programs.dms-shell = {
-        enable = host.desktop.compositor != null;
-
-        systemd = {
-          enable = true;
-          restartIfChanged = true;
-        };
-      };
-    };
+    nixos.programs.dms-shell.enable = true;
   };
 }

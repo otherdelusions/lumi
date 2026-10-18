@@ -90,7 +90,6 @@
         };
 
         ember = {
-          desktop.compositor = "niri";
           desktop.terminal = "foot";
 
           users.ferret = { };

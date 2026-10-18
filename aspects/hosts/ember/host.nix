@@ -14,13 +14,15 @@
         netsec.clash-verge
       ];
 
-    nixos = { pkgs, ... }: {
+    nixos = { config, pkgs, ... }: {
       networking.networkmanager.enable = true;
 
       services.avahi = {
         enable = true;
         nssmdns4 = true;
       };
+
+      services.displayManager.dms-greeter.configHome = config.users.users.ferret.home;
 
       time.timeZone = "Europe/Moscow";
       documentation.man.cache.enable = false;

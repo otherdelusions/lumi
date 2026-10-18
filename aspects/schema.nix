@@ -1,16 +1,6 @@
 { lib, ... }:
 {
   den.schema.host.options.desktop = {
-    compositor = lib.mkOption {
-      type = lib.types.nullOr (
-        lib.types.enum [
-          "niri"
-        ]
-      );
-      default = null;
-      description = "The compositor this host runs (if it runs any)";
-    };
-
     terminal = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
