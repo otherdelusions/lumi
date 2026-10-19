@@ -3,8 +3,8 @@
 
   nixConfig = {
     extra-substituters = [
-      "https://cache.numtide.com"
-      "https://nix-community.cachix.org"
+      "https://cache.numtide.com?priority=50"
+      "https://nix-community.cachix.org?priority=50"
       "https://lumi.cachix.org"
     ];
     extra-trusted-public-keys = [
@@ -31,11 +31,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-secrets = {
       url = "github:unnamed-systems/nix-secrets";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,11 +51,6 @@
       };
     };
 
-    git-hooks = {
-      url = "github:cachix/git-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     copyparty = {
       url = "github:9001/copyparty";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -72,8 +62,6 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.den.flakeModule
-        inputs.git-hooks.flakeModule
-        inputs.treefmt-nix.flakeModule
 
         (inputs.import-tree [
           ./aspects
@@ -101,51 +89,67 @@
       perSystem =
         {
           pkgs,
-          config,
           inputs',
           ...
         }:
         {
-          treefmt.config = {
-            flakeCheck = false;
-
-            programs = {
-              nixfmt.enable = true;
-              yamlfmt.enable = true;
+          formatter = pkgs.nixfmt-tree.override {
+            runtimeInputs = [ pkgs.yamlfmt ];
+            settings.formatter.yamlfmt = {
+              command = "yamlfmt";
+              includes = [
+                "*.yaml"
+                "*.yml"
+              ];
             };
           };
 
-          pre-commit.settings.hooks = {
-            actionlint.enable = true;
+          checks.lint =
+            pkgs.runCommand "check-lint"
+              {
+                nativeBuildInputs = with pkgs; [
+                  nixfmt
+                  deadnix
+                  statix
+                  yamlfmt
+                  actionlint
+                  markdownlint-cli
+                ];
+              }
+              ''
+                cd ${inputs.self}
 
-            treefmt = {
-              enable = true;
-              package = config.treefmt.build.wrapper;
-            };
+                echo "Running nixfmt..."
+                find . -type f -name '*.nix' -exec nixfmt --check {} +
 
-            markdownlint = {
-              enable = true;
-              settings.configuration = {
-                MD013 = false;
-                MD033 = false;
-              };
-            };
+                echo "Running deadnix..."
+                deadnix --fail
 
-            convco.enable = true;
-          };
+                echo "Running statix..."
+                statix check .
+
+                echo "Running yamlfmt & actionlint..."
+                find . -type f \( -name '*.yaml' -o -name '*.yml' \) -exec yamlfmt -lint {} +
+                find .github/workflows -type f \( -name '*.yaml' -o -name '*.yml' \) -exec actionlint {} +
+
+                echo "Running markdownlint..."
+                markdownlint --dot --disable MD013 MD033 -- .
+
+                touch "$out" # success
+              '';
 
           devShells.default = pkgs.mkShell {
             name = "lumi";
-            inherit (config.pre-commit) shellHook;
+
             NIX_CONFIG = "extra-experimental-features = nix-command flakes";
             DIRENV_WARN_TIMEOUT = "0s";
 
-            packages = [
-              pkgs.nixd
-              pkgs.nixfmt
-              pkgs.just
-              pkgs.nurl
-              pkgs.caligula
+            packages = with pkgs; [
+              nixd
+              nixfmt
+              yamlfmt
+              just
+              nurl
               inputs'.disko.packages.disko
             ];
           };
