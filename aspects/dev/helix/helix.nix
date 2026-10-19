@@ -22,8 +22,6 @@
           extraPackages = with pkgs; [
             nixd
             nixfmt
-            yamlfmt
-            gopls
           ];
         };
 

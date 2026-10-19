@@ -1,13 +1,9 @@
 {
   den.aspects.dev = {
-    provides.to-hosts.nixos =
+    homeManager =
       { pkgs, ... }:
       {
-        environment.systemPackages = with pkgs; [
-          nurl
-          go
-          delve
-        ];
+        home.packages = [ pkgs.nurl ];
       };
   };
 }
