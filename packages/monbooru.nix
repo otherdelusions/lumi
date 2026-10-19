@@ -33,9 +33,10 @@
           env.CGO_ENABLED = if withTagger then 1 else 0;
 
           postPatch = lib.optionalString withDesktop ''
-            # Autostart must use the wrapper, which supplies FFmpeg and ONNX Runtime.
+            # Use wrapper instead of binary to get ffmpeg and onnx in PATH
             substituteInPlace internal/shared/desktop/integration.go \
               --replace-fail 'exe := Program()' 'exe := "${placeholder "out"}/bin/monbooru"'
+            # Recognize /nix/store as a packaged installation
             substituteInPlace internal/shared/desktop/integration_linux.go \
               --replace-fail '[]string{"/usr/", "/opt/"}' '[]string{"/usr/", "/opt/", "${builtins.storeDir}/"}'
           '';
