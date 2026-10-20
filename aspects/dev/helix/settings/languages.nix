@@ -3,7 +3,7 @@
   den.aspects.dev.helix.includes = [ den.aspects.dev.helix.languages ];
 
   den.aspects.dev.helix.languages = {
-    homeManager = { ... }: {
+    homeManager = _: {
       programs.helix.languages = {
         language-server = {
           gopls.config = {
