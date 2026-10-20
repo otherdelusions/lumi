@@ -10,10 +10,11 @@
       in
       {
         programs.foot.settings = {
-          main.font = "${config.theme.fonts.monospace.name}:size=12";
-          main.dpi-aware = "no";
-
-          main.initial-color-theme = "dark";
+          main = {
+            font = "${config.theme.fonts.monospace.name}:size=12";
+            dpi-aware = "no";
+            initial-color-theme = "dark";
+          };
           "colors-dark" = {
             alpha = 1.0;
             foreground = colors.base05;

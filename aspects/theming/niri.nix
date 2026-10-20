@@ -9,7 +9,6 @@
           inherit (config.theme) colors;
         in
         {
-          layout.background-color = colors.withHashtag.base00;
           overview.backdrop-color = colors.withHashtag.base00;
 
           cursor = {
@@ -17,13 +16,15 @@
             xcursor-size = config.theme.cursor.size;
           };
 
-          layout.border = {
-            on = { };
-            active-color = colors.withHashtag.base0B;
-            inactive-color = colors.withHashtag.base03;
+          layout = {
+            background-color = colors.withHashtag.base00;
+            border = {
+              on = { };
+              active-color = colors.withHashtag.base0B;
+              inactive-color = colors.withHashtag.base03;
+            };
+            focus-ring.off = { };
           };
-
-          layout.focus-ring.off = { };
         };
     };
   };

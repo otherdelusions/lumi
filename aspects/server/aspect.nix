@@ -4,11 +4,13 @@
       { lib, ... }:
       {
         fonts.fontconfig.enable = lib.mkDefault false;
-        xdg.autostart.enable = lib.mkDefault false;
-        xdg.icons.enable = lib.mkDefault false;
-        xdg.menus.enable = lib.mkDefault false;
-        xdg.mime.enable = lib.mkDefault false;
-        xdg.sounds.enable = lib.mkDefault false;
+        xdg = {
+          autostart.enable = lib.mkDefault false;
+          icons.enable = lib.mkDefault false;
+          menus.enable = lib.mkDefault false;
+          mime.enable = lib.mkDefault false;
+          sounds.enable = lib.mkDefault false;
+        };
       };
   };
 }

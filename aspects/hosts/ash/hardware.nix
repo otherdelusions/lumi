@@ -10,17 +10,19 @@
     {
       imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-      boot.initrd.availableKernelModules = [
-        "ahci"
-        "xhci_pci"
-        "usbhid"
-        "usb_storage"
-        "sd_mod"
-      ];
+      boot = {
+        initrd.availableKernelModules = [
+          "ahci"
+          "xhci_pci"
+          "usbhid"
+          "usb_storage"
+          "sd_mod"
+        ];
 
-      boot.kernelModules = [ "kvm-intel" ];
+        kernelModules = [ "kvm-intel" ];
 
-      boot.tmp.cleanOnBoot = true;
+        tmp.cleanOnBoot = true;
+      };
 
       hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     };

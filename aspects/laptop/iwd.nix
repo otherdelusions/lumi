@@ -6,16 +6,19 @@
     nixos =
       { lib, ... }:
       {
-        networking.wireless.iwd = {
-          enable = true;
-          settings.Network.EnableIPv6 = lib.mkDefault false;
-        };
+        networking = {
+          wireless = {
+            iwd = {
+              enable = true;
+              settings.Network.EnableIPv6 = lib.mkDefault false;
+            };
+            enable = false;
+          };
 
-        networking.wireless.enable = false;
-
-        networking.networkmanager.wifi = {
-          backend = "iwd";
-          powersave = true;
+          networkmanager.wifi = {
+            backend = "iwd";
+            powersave = true;
+          };
         };
       };
   };

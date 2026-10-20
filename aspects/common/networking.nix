@@ -14,10 +14,13 @@
           allowPing = true;
         };
 
-        systemd.services.NetworkManager-wait-online.enable = false;
-        systemd.network.wait-online.enable = false;
-
-        systemd.services.systemd-networkd.stopIfChanged = false;
+        systemd = {
+          network.wait-online.enable = false;
+          services = {
+            NetworkManager-wait-online.enable = false;
+            systemd-networkd.stopIfChanged = false;
+          };
+        };
       };
   };
 }
