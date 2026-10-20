@@ -104,8 +104,8 @@
             };
           };
 
-          checks.lint =
-            pkgs.runCommand "check-lint"
+          checks.formatting =
+            pkgs.runCommand "check-formatting"
               {
                 nativeBuildInputs = with pkgs; [
                   nixfmt
