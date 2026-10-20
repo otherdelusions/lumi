@@ -14,7 +14,7 @@
         lib,
         pkgs,
         config,
-        inputs',
+        self',
         ...
       }:
       let
@@ -131,7 +131,7 @@
           services.monbooru = {
             enable = true;
             openFirewall = true;
-            package = mkDefault inputs'.self.packages.monbooru;
+            package = mkDefault self'.packages.monbooru;
 
             inherit (hl) user group timeZone;
             inherit (cfg) passwordFile dataDir settings;
