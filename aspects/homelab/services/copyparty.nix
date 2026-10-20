@@ -108,6 +108,8 @@
             localtime = mkDefault true;
             rotf-tz = mkDefault hl.timeZone;
             hist = mkDefault cfg.dataDir;
+            chmod-f = mkDefault "664";
+            chmod-d = mkDefault "775";
           };
 
           services.copyparty = {
@@ -120,6 +122,10 @@
               p = cfg.port;
             };
           };
+
+          systemd.services.copyparty.unitConfig.RequiresMountsFor =
+            lib.mapAttrsToList (_: v: v.path) config.services.copyparty.volumes
+            ++ lib.optional (config.services.copyparty.settings ? hist) config.services.copyparty.settings.hist;
 
           systemd.tmpfiles.settings.copyparty-history =
             lib.optionalAttrs (config.services.copyparty.settings ? hist)

@@ -14,6 +14,7 @@
         lib,
         pkgs,
         config,
+        inputs',
         ...
       }:
       let
@@ -31,6 +32,7 @@
           submodule
           nullOr
           path
+          port
           ;
 
         hl = config.homelab;
@@ -61,16 +63,23 @@
             description = "Monbooru data directory.";
           };
 
-          bindAddress = mkOption {
+          address = mkOption {
             type = str;
-            default = "127.0.0.1:8080";
-            example = "0.0.0.0:9090";
-            description = "address:port to listen on.";
+            default = "0.0.0.0";
+            example = "127.0.0.1";
+            description = "Address to listen on.";
+          };
+
+          port = mkOption {
+            type = port;
+            default = 8455;
+            example = 9090;
+            description = "Port to listen on.";
           };
 
           baseUrl = mkOption {
             type = str;
-            default = "http://localhost:8080";
+            default = "http://${hl.baseDomain}:${toString cfg.port}";
             example = "https://monbooru.example.com";
             description = "Monbooru base URL.";
           };
@@ -112,7 +121,7 @@
           homelab.services.monbooru.settings = {
             galleries = mkDefault cfg.galleries;
             server = {
-              bind_address = mkDefault cfg.bindAddress;
+              bind_address = mkDefault "${cfg.address}:${toString cfg.port}";
               base_url = mkDefault cfg.baseUrl;
             };
           };
@@ -122,7 +131,7 @@
           services.monbooru = {
             enable = true;
             openFirewall = true;
-            package = mkDefault inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.monbooru;
+            package = mkDefault inputs'.self.packages.monbooru;
 
             inherit (hl) user group timeZone;
             inherit (cfg) passwordFile dataDir settings;

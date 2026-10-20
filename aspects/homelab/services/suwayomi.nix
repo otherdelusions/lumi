@@ -91,6 +91,7 @@
 
           homelab.dirs.extra = [
             serviceCfg.dataDir
+            "${serviceCfg.dataDir}/.local"
             "${serviceCfg.dataDir}/.local/share"
           ]
           ++ mediaDirs;

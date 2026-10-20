@@ -52,8 +52,8 @@
           systemd.tmpfiles.settings.homelab-base = {
             "${hl.dirs.data}".d = {
               mode = "0755";
-              inherit (hl) user;
-              inherit (hl) group;
+              user = "root";
+              group = "root";
             };
           };
 

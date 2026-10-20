@@ -66,6 +66,11 @@
             EnableInsightsCollector = mkDefault false;
           };
 
+          homelab.dirs.extra = [ config.services.navidrome.settings.MusicFolder ];
+          systemd.tmpfiles.settings.navidromeDirs."${config.services.navidrome.settings.MusicFolder}" =
+            lib.mkForce
+              { };
+
           systemd.services.navidrome.unitConfig.RequiresMountsFor = [
             config.services.navidrome.settings.DataFolder
             config.services.navidrome.settings.MusicFolder

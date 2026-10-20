@@ -6,7 +6,11 @@
     nixos =
       { config, ... }:
       {
-        homelab.dirs.extra = [ "${config.homelab.dirs.data}/services" ];
+        systemd.tmpfiles.settings.homelab-services."${config.homelab.dirs.data}/services".d = {
+          mode = "0755";
+          user = "root";
+          group = "root";
+        };
       };
   };
 }
