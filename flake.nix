@@ -147,6 +147,7 @@
             packages = with pkgs; [
               nixd
               nixfmt
+              statix
               yamlfmt
               just
               nurl
