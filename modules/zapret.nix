@@ -11,8 +11,8 @@
       flowsealData = pkgs.fetchFromGitHub {
         owner = "Flowseal";
         repo = "zapret-discord-youtube";
-        tag = "1.10.1";
-        hash = "sha256-LPV9ruCAznU8LL7wT+KMt0fECGMUP+8qo1r5PxqMYxs=";
+        tag = "1.10.4";
+        hash = "sha256-5qKg2BvW4XcjY+Az9ocvwACcfsfBpG4I3Xh6SCPksIM=";
       };
 
       strategies =
@@ -20,7 +20,7 @@
           flowGoogle = "${flowsealData}/lists/list-google.txt";
           flowEx = "${flowsealData}/lists/list-exclude.txt";
           flowIpEx = "${flowsealData}/lists/ipset-exclude.txt";
-          flowIp = "${flowsealData}/lists/ipset-all.txt";
+          flowIp = "${flowsealData}/.service/ipset-service.txt";
 
           quicGoogle = "${flowsealData}/bin/quic_initial_www_google_com.bin";
           tlsGoogle = "${flowsealData}/bin/tls_clienthello_www_google_com.bin";
@@ -75,6 +75,10 @@
         };
 
       cfg = config.netsec.zapret;
+      serviceCfg = config.services.zapret;
+
+      firstPackets = "-m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6";
+      queue = "-m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num ${toString serviceCfg.qnum} --queue-bypass";
     in
     {
       options.netsec.zapret = {
@@ -96,7 +100,20 @@
           params = strategies.${cfg.strategy}.filters;
         };
 
-        networking.hostFiles = lib.optional cfg.addHosts "${flowsealData}/.service/hosts";
+        networking = {
+          hostFiles = lib.optional cfg.addHosts "${flowsealData}/.service/hosts";
+          firewall = lib.mkIf serviceCfg.configureFirewall {
+            extraCommands = "ip46tables -t mangle -I POSTROUTING -p tcp --dport 8443 ${firstPackets} ${queue}";
+
+            # cleanup duplicate rules
+            extraStopCommands = ''
+              for port in 80 443 8443; do
+                while iptables -w -t mangle -D POSTROUTING -p tcp --dport "$port" ${firstPackets} ${queue} 2>/dev/null; do :; done
+              done
+              while iptables -w -t mangle -D POSTROUTING -p udp -m multiport --dports ${lib.concatStringsSep "," serviceCfg.udpPorts} ${queue} 2>/dev/null; do :; done
+            '';
+          };
+        };
       };
     };
 }
