@@ -31,6 +31,7 @@
             focus-follows-mouse = { };
             touchpad = {
               tap = { };
+              dwt = { };
               natural-scroll = { };
               drag-lock = { };
               disabled-on-external-mouse = { };
