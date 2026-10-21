@@ -7,6 +7,7 @@
 
     nixos = {
       networking.firewall.enable = false;
+      systemd.services.NetworkManager-wait-online.enable = false;
 
       services.zfs.autoScrub.enable = false;
 

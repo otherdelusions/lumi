@@ -6,8 +6,6 @@
     nixos =
       { lib, ... }:
       {
-        boot.kernel.sysctl."net.ipv4.tcp_fastopen" = 0;
-
         # stop NM from supplying DHCP DNS info
         networking.networkmanager = {
           dns = lib.mkForce "none";

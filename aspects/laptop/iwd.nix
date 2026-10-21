@@ -3,23 +3,9 @@
   den.aspects.laptop.includes = [ den.aspects.laptop.iwd ];
 
   den.aspects.laptop.iwd = {
-    nixos =
-      { lib, ... }:
-      {
-        networking = {
-          wireless = {
-            iwd = {
-              enable = true;
-              settings.Network.EnableIPv6 = lib.mkDefault false;
-            };
-            enable = false;
-          };
-
-          networkmanager.wifi = {
-            backend = "iwd";
-            powersave = true;
-          };
-        };
-      };
+    nixos.networking.networkmanager.wifi = {
+      backend = "iwd";
+      powersave = true;
+    };
   };
 }

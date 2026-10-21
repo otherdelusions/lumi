@@ -15,7 +15,13 @@
       ];
 
     nixos = { config, pkgs, ... }: {
-      networking.networkmanager.enable = true;
+      networking = {
+        networkmanager.enable = true;
+        enableIPv6 = false;
+      };
+
+      systemd.services.NetworkManager-wait-online.enable = false;
+      boot.kernel.sysctl."net.ipv4.tcp_fastopen" = 0; # else DoT wont work
 
       services.avahi = {
         enable = true;
