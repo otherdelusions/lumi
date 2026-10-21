@@ -9,14 +9,14 @@
     nixos = {
       documentation.man.cache.enable = false;
 
-      security.nix-secrets = {
-        secrets = {
-          "services/copyparty/ferret_pass" = {
-            recipients = [ "ash" ];
-            owner = "homelab";
-          };
-        };
-      };
+      # security.nix-secrets = {
+      #   secrets = {
+      #     "services/copyparty/ferret_pass" = {
+      #       recipients = [ "ash" ];
+      #       owner = "homelab";
+      #     };
+      #   };
+      # };
     };
   };
 }

@@ -89,7 +89,15 @@
               options = {
                 mountpoint = "legacy";
                 recordsize = "1M";
+                acltype = "posix";
+                xattr = "sa";
               };
+            };
+
+            forgejo = {
+              type = "zfs_fs";
+              mountpoint = "/srv/forgejo";
+              options.mountpoint = "legacy";
             };
           };
         };

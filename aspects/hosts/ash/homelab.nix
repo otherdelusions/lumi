@@ -1,34 +1,35 @@
 { den, ... }:
 {
   den.aspects.ash = {
-    includes = with den.aspects.homelab; [
-      services.avahi
-      services.copyparty
+    includes = with den.aspects.homelab.services; [
+      avahi
     ];
 
-    nixos = { config, ... }: {
-      homelab.dirs.content = "/mirror";
-
-      homelab.dirs.extra = [
-        "/mirror/music"
-      ];
-
-      homelab.services = {
-        copyparty = {
-          openFirewall = true;
-
-          accounts = {
-            ferret.passwordFile = config.security.nix-secrets.secrets."services/copyparty/ferret_pass".path;
+    nixos =
+      { config, lib, ... }:
+      let
+        hl = config.homelab;
+        mediaDirs = lib.unique (
+          [ hl.dirs.content ] ++ lib.filter (lib.hasPrefix "${hl.dirs.content}/") hl.dirs.extra
+        );
+      in
+      {
+        systemd.tmpfiles.settings = {
+          ash-homelab-base."${hl.dirs.content}".z = {
+            mode = "2775";
+            user = "root";
+            inherit (hl) group;
           };
+          ash-homelab-media = lib.genAttrs mediaDirs (_: {
+            # force group-writable files
+            "a+".argument = "u::rwx,g::rwx,o::rx,d:u::rwx,d:g::rwx,d:o::rx";
+          });
+        };
 
-          volumes = {
-            "/" = {
-              path = "/mirror";
-              access.rwmda = [ "ferret" ];
-            };
-          };
+        homelab = {
+          baseDomain = "ash.local";
+          dirs.content = "/mirror";
         };
       };
-    };
   };
 }
