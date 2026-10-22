@@ -4,10 +4,8 @@
 
   den.aspects.common.networking = {
     nixos =
-      { host, lib, ... }:
+      { lib, ... }:
       {
-        networking.hostId = lib.substring 0 8 (lib.hashString "sha256" host.name);
-
         networking.firewall = {
           enable = lib.mkDefault true;
           logRefusedConnections = lib.mkDefault false;
