@@ -20,7 +20,7 @@
           }
           // lib.mapAttrs (_: host: {
             HostName = lib.mkDefault "${host.hostName}.local"; # mdns name
-            User = lib.mkDefault user.userName;
+            User = lib.mkDefault host.users.${user.name}.userName;
           }) sshHosts;
         };
       };
