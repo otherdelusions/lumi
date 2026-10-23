@@ -14,7 +14,11 @@
         netsec.clash-verge
       ];
 
-    nixos = { config, pkgs, ... }: {
+    provides.ferret.nixos = { config, user, ... }: {
+      services.displayManager.dms-greeter.configHome = config.users.users.${user.userName}.home;
+    };
+
+    nixos = { pkgs, ... }: {
       networking = {
         networkmanager.enable = true;
         enableIPv6 = false;
@@ -27,8 +31,6 @@
         enable = true;
         nssmdns4 = true;
       };
-
-      services.displayManager.dms-greeter.configHome = config.users.users.ferret.home;
 
       time.timeZone = "Europe/Moscow";
       documentation.man.cache.enable = false;
