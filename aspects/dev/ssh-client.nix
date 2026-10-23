@@ -15,11 +15,7 @@
 
           settings = {
             "*" = {
-              ForwardAgent = lib.mkDefault true;
-              Compression = false;
               AddKeysToAgent = "yes";
-              ControlMaster = "no";
-              ControlPersist = "no";
             };
           }
           // lib.mapAttrs (_: host: {
