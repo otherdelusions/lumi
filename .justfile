@@ -39,7 +39,7 @@ archive:
 
 [doc('Print disk ids for a given device in /dev')]
 @disk-id sdx:
-    find -L /dev/disk/by-id -samefile /dev/{{sdx}} -printf '/dev/disk/dy-id/%f\n' | sort
+    find -L /dev/disk/by-id -samefile /dev/{{sdx}} -printf '%p\n' | sort
 
 [doc('Build an iso of a config')]
 build-iso target='interloper':
@@ -61,4 +61,4 @@ zip:
 [no-cd]
 [doc('Add/Remove underscore from a filename to make it invisible/visible to import-tree')]
 @toggle module:
-    m={{quote(module)}}; d=$(dirname -- "$m"); f=${m##*/}; case "$f" in _*) new="$d/${f#_}" ;; *) new="$d/_$f" ;; esac; echo "$m -> $new"; mv -- "$m" "$new"
+    m={{quote(module)}}; d=$(dirname -- "$m"); f=${m##*/}; case "$f" in _*) new="$d/${f#_}" ;; *) new="$d/_$f" ;; esac; echo "$m -> $new"; mv -T --update=none-fail -- "$m" "$new"
