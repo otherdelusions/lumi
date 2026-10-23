@@ -4,7 +4,7 @@
 
   den.aspects.common.nix = {
     nixos =
-      { lib, config, ... }:
+      { lib, ... }:
       {
         nix = {
           settings = {
@@ -30,7 +30,6 @@
           };
 
           channel.enable = lib.mkDefault false;
-          optimise.automatic = lib.mkDefault (!config.boot.isContainer);
 
           nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
         };
