@@ -37,7 +37,7 @@
           let
             inherit (config.xdg.userDirs) templates;
           in
-          {
+          lib.optionalAttrs (config.xdg.userDirs.enable && templates != null) {
             "${templates}/Empty Text.txt".text = "";
           };
       };
