@@ -50,7 +50,7 @@
                 browseable = "yes";
                 "read only" = "no";
                 "guest ok" = "no";
-                "create mask" = "0644";
+                "inherit permissions" = "yes";
               }
             '';
             description = "Settings applied to all shares.";
@@ -95,8 +95,7 @@
               browseable = mkDefault "yes";
               "read only" = mkDefault "no";
               "guest ok" = mkDefault "no";
-              "create mask" = mkDefault "0644";
-              "directory mask" = mkDefault "0755";
+              "inherit permissions" = mkDefault "yes";
             };
           };
 
