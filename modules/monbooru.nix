@@ -205,10 +205,14 @@
             wants = [ "network.target" ];
 
             preStart = ''
-              set -e
-              install -m600 -o "${cfg.user}" -g "${cfg.group}" \
-                "${settingsFormat.generate "monbooru.toml" cfg.settings}" \
-                "${configFile}"
+              # atomically merge nix config with UI changes
+              touch "${configFile}"
+              newConfig=$(mktemp "${configFile}.XXXXXX")
+              trap 'rm -f "$newConfig"' EXIT
+
+              ${pkgs.yq}/bin/tomlq --toml-output --slurp '.[0] * .[1]' \
+                "${configFile}" "${settingsFormat.generate "monbooru.toml" cfg.settings}" > "$newConfig"
+              mv -T "$newConfig" "${configFile}"
             ''
             + lib.optionalString hasPassword ''
               HASH=$(${getExe cfg.package} -hash-password "$(cat "${cfg.passwordFile}")")
@@ -245,14 +249,7 @@
               ]
               ++ map (g: g.gallery_path) cfg.settings.galleries;
 
-              CapabilityBoundingSet = [
-                "CAP_CHOWN"
-                "CAP_DAC_OVERRIDE"
-              ];
-              AmbientCapabilities = [
-                "CAP_CHOWN"
-                "CAP_DAC_OVERRIDE"
-              ];
+              CapabilityBoundingSet = "";
 
               NoNewPrivileges = true;
 

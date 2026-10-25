@@ -32,7 +32,17 @@
           tags = lib.optional withTagger "tagger";
           env.CGO_ENABLED = if withTagger then 1 else 0;
 
-          postPatch = lib.optionalString withDesktop ''
+          postPatch = ''
+            # Allow group edits to gallery media
+            substituteInPlace internal/library/land.go internal/gallery/move.go \
+              internal/gallery/cbz_generate.go internal/web/handlers_collection_generate.go \
+              --replace-fail '0o755' '0o775'
+            substituteInPlace internal/web/handlers_manga.go \
+              --replace-fail '0755' '0775'
+            substituteInPlace internal/gallery/replace.go internal/gallery/cbz_generate.go \
+              --replace-fail '0o644' '0o664'
+          ''
+          + lib.optionalString withDesktop ''
             # Use wrapper instead of binary to get ffmpeg and onnx in PATH
             substituteInPlace internal/shared/desktop/integration.go \
               --replace-fail 'exe := Program()' 'exe := "${placeholder "out"}/bin/monbooru"'
