@@ -58,7 +58,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs; };
           modules = [
-            ./modules/common.nix
+            ./modules/common
             (./hosts + "/${name}")
           ];
         };

@@ -122,7 +122,7 @@ in
 
     wallPaper = mkOption {
       type = nullOr (coercedTo path (src: "${src}") pathInStore);
-      default = "${../../../config/wallpaper}/gray-buildings.jpg";
+      default = "${../../../../config/wallpaper}/gray-buildings.jpg";
     };
 
     cursor = mkOption {

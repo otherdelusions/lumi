@@ -1,12 +1,12 @@
 {
   imports = [
     # Enable services by importing their configuration here.
-    # ./services/copyparty.nix
-    # ./services/monbooru.nix
-    # ./services/navidrome.nix
-    # ./services/suwayomi.nix
-    # ./services/forgejo.nix
-    # ./services/samba.nix
+    # ./copyparty.nix
+    # ./monbooru.nix
+    # ./navidrome.nix
+    # ./suwayomi.nix
+    # ./forgejo.nix
+    # ./samba.nix
   ];
 
   services.avahi = {

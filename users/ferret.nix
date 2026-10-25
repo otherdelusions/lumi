@@ -6,6 +6,7 @@
 }:
 {
   imports = [ inputs.home-manager.nixosModules.home-manager ];
+
   users.users.ferret = {
     isNormalUser = true;
     extraGroups = [
@@ -15,7 +16,9 @@
     shell = pkgs.fish;
     initialPassword = lib.mkDefault "changeme";
   };
+
   programs.fish.enable = true;
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -23,6 +26,7 @@
     extraSpecialArgs = { inherit inputs; };
     users.ferret = import ../home/ferret;
   };
+
   security.nix-secrets = {
     identityPaths = [ "/home/ferret/keys.txt" ];
     recipientAliases.ferret = "age1g6flkq5k0kqxy2y7fdk5ttpzjp6t0d7yz47h0p2mnvuu7we8x3fsa4m5m0";

@@ -1,0 +1,26 @@
+{ inputs, lib, ... }:
+{
+  nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+        "pipe-operators"
+      ];
+      accept-flake-config = true;
+      auto-optimise-store = true;
+      warn-dirty = false;
+      connect-timeout = lib.mkDefault 5;
+      fallback = true;
+      builders-use-substitutes = true;
+      trusted-users = [ "@wheel" ];
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+    channel.enable = lib.mkDefault false;
+    nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+  };
+}

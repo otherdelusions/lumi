@@ -15,7 +15,7 @@
       apple-fonts = inputs.apple-fonts.packages.${pkgs.stdenv.hostPlatform.system};
     in
     {
-      wallPaper = "${../../../config/wallpaper}/qingyi.jpg";
+      wallPaper = "${../../../../config/wallpaper}/qingyi.jpg";
 
       fonts = {
         monospace = {

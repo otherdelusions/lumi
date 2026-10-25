@@ -1,13 +1,13 @@
 { lib, ... }:
 {
   imports = [
-    ../../modules/ferret.nix
+    ../../users/ferret.nix
     ../../modules/zfs.nix
     ./hardware.nix
     ./disko.nix
     ./storage.nix
     ./users.nix
-    ./services.nix
+    ./services
   ];
 
   networking.hostName = "ash";
