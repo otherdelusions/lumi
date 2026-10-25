@@ -1,83 +1,75 @@
 {
-  perSystem =
-    { pkgs, ... }:
-    {
-      packages.morewaita-accent-icon-theme = pkgs.callPackage (
-        {
-          stdenv,
-          lib,
-          fetchFromGitHub,
-          gtk3,
-          adwaita-icon-theme,
-          morewaita-icon-theme,
-          accentColor ? "",
-        }:
-        let
-          variant = if accentColor == "" then "blue" else "accent";
-          accent = lib.removePrefix "#" accentColor;
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  gtk3,
+  adwaita-icon-theme,
+  morewaita-icon-theme,
+  accentColor ? "",
+}:
+let
+  variant = if accentColor == "" then "blue" else "accent";
+  accent = lib.removePrefix "#" accentColor;
 
-          brighten = channel: lib.min 255 (lib.fromHexString channel * 135 / 100);
-          hexByte = n: lib.toLower (lib.fixedWidthString 2 "0" (lib.toHexString n));
-          highlight = lib.concatMapStrings (offset: hexByte (brighten (builtins.substring offset 2 accent))) [
-            0
-            2
-            4
-          ];
-        in
-        stdenv.mkDerivation {
-          pname = "morewaita-accent-icon-theme";
-          version = "367849d";
+  brighten = channel: lib.min 255 (lib.fromHexString channel * 135 / 100);
+  hexByte = n: lib.toLower (lib.fixedWidthString 2 "0" (lib.toHexString n));
+  highlight = lib.concatMapStrings (offset: hexByte (brighten (builtins.substring offset 2 accent))) [
+    0
+    2
+    4
+  ];
+in
+stdenv.mkDerivation {
+  pname = "morewaita-accent-icon-theme";
+  version = "367849d";
 
-          src = fetchFromGitHub {
-            owner = "dpejoh";
-            repo = "Adwaita-colors";
-            rev = "367849dcdd269f9be17b143763eb7279087ab88c";
-            hash = "sha256-R71ZRoDdlWJy+TkWkmXwyRWJTAYi4QOSmnO6GiOfGCM=";
-          };
+  src = fetchFromGitHub {
+    owner = "dpejoh";
+    repo = "Adwaita-colors";
+    rev = "367849dcdd269f9be17b143763eb7279087ab88c";
+    hash = "sha256-R71ZRoDdlWJy+TkWkmXwyRWJTAYi4QOSmnO6GiOfGCM=";
+  };
 
-          nativeBuildInputs = [
-            gtk3
-          ];
-          buildInputs = [ adwaita-icon-theme ];
-          propagatedBuildInputs = [
-            morewaita-icon-theme
-            adwaita-icon-theme
-          ];
+  nativeBuildInputs = [
+    gtk3
+  ];
+  buildInputs = [ adwaita-icon-theme ];
+  propagatedBuildInputs = [
+    morewaita-icon-theme
+    adwaita-icon-theme
+  ];
 
-          dontDropIconThemeCache = true;
-          dontBuild = true;
+  dontDropIconThemeCache = true;
+  dontBuild = true;
 
-          postPatch = ''
-            sed -i 's|ADWAITA_PATHS=(|ADWAITA_PATHS=(\n    "${pkgs.adwaita-icon-theme}/share/icons/Adwaita"|' variants.conf
-            sed -i 's|recolor_svgs "\$variant" "\$theme_dir"|chmod -R u+w "$theme_dir"\n    &|' setup
-            patchShebangs setup
-          ''
-          + lib.optionalString (variant == "accent") ''
-            # register accent as an extra color variant
-            echo 'COLOR_MAP[accent]="3f8ae5:${accent} 438de6:${accent} 62a0ea:${accent} a4caee:${highlight} afd4ff:${highlight} c0d5ea:${highlight}"' >> variants.conf
-            sed -i 's/^ALL_VARIANTS=(\(.*\))/ALL_VARIANTS=(\1 accent)/' variants.conf
-            cp -r mimetypes/blue mimetypes/accent
-          '';
+  postPatch = ''
+    sed -i 's|ADWAITA_PATHS=(|ADWAITA_PATHS=(\n    "${adwaita-icon-theme}/share/icons/Adwaita"|' variants.conf
+    sed -i 's|recolor_svgs "\$variant" "\$theme_dir"|chmod -R u+w "$theme_dir"\n    &|' setup
+    patchShebangs setup
+  ''
+  + lib.optionalString (variant == "accent") ''
+    # register accent as an extra color variant
+    echo 'COLOR_MAP[accent]="3f8ae5:${accent} 438de6:${accent} 62a0ea:${accent} a4caee:${highlight} afd4ff:${highlight} c0d5ea:${highlight}"' >> variants.conf
+    sed -i 's/^ALL_VARIANTS=(\(.*\))/ALL_VARIANTS=(\1 accent)/' variants.conf
+    cp -r mimetypes/blue mimetypes/accent
+  '';
 
-          installPhase = ''
-            runHook preInstall
+  installPhase = ''
+    runHook preInstall
 
-            export HOME=$TMPDIR/home
-            mkdir -p "$HOME/.local/share/icons"
-            ./setup -i -p "$HOME/.local/share/icons" -f ${variant}
+    export HOME=$TMPDIR/home
+    mkdir -p "$HOME/.local/share/icons"
+    ./setup -i -p "$HOME/.local/share/icons" -f ${variant}
 
-            find "$HOME/.local/share/icons" -xtype l -delete
+    find "$HOME/.local/share/icons" -xtype l -delete
 
-            theme="$HOME/.local/share/icons/Adwaita-${variant}"
-            sed -i 's/^Inherits=.*/Inherits=MoreWaita,Adwaita,AdwaitaLegacy,hicolor/' "$theme/index.theme"
-            gtk-update-icon-cache -f "$theme"
+    theme="$HOME/.local/share/icons/Adwaita-${variant}"
+    sed -i 's/^Inherits=.*/Inherits=MoreWaita,Adwaita,AdwaitaLegacy,hicolor/' "$theme/index.theme"
+    gtk-update-icon-cache -f "$theme"
 
-            mkdir -p $out/share/icons
-            cp -r "$HOME/.local/share/icons/Adwaita-"* $out/share/icons/
+    mkdir -p $out/share/icons
+    cp -r "$HOME/.local/share/icons/Adwaita-"* $out/share/icons/
 
-            runHook postInstall
-          '';
-        }
-      ) { };
-    };
+    runHook postInstall
+  '';
 }

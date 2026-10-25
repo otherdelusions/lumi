@@ -1,0 +1,105 @@
+{ inputs, ... }:
+{
+  imports = [
+    inputs.disko.nixosModules.disko
+  ];
+
+  disko.devices = {
+    disk = {
+      ssd = {
+        device = "/dev/disk/by-id/ata-SPCC_Solid_State_Disk_AA230630S3128G03951";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            ESP = {
+              type = "EF00";
+              size = "256M";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+                mountOptions = [ "umask=0077" ];
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "btrfs";
+                mountpoint = "/";
+              };
+            };
+          };
+        };
+      };
+
+      hdd1 = {
+        type = "disk";
+        device = "/dev/disk/by-id/ata-WDC_WD20EFPX-68C4TN0_WD-WX22D93D5P5F";
+        content = {
+          type = "gpt";
+          partitions = {
+            zfs = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "mpool";
+              };
+            };
+          };
+        };
+      };
+
+      hdd2 = {
+        type = "disk";
+        device = "/dev/disk/by-id/ata-WDC_WD20EFPX-68C4TN0_WD-WX72D636LNVX";
+        content = {
+          type = "gpt";
+          partitions = {
+            zfs = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "mpool";
+              };
+            };
+          };
+        };
+      };
+    };
+
+    zpool = {
+      mpool = {
+        type = "zpool";
+        mode = "mirror";
+        options.cachefile = "none";
+        options.ashift = "12";
+
+        rootFsOptions = {
+          compression = "lz4";
+          atime = "off";
+        };
+
+        datasets = {
+          data = {
+            type = "zfs_fs";
+            mountpoint = "/mirror";
+            options = {
+              mountpoint = "legacy";
+              recordsize = "1M";
+              acltype = "posix";
+              xattr = "sa";
+            };
+          };
+
+          forgejo = {
+            type = "zfs_fs";
+            mountpoint = "/srv/forgejo";
+            options.mountpoint = "legacy";
+          };
+        };
+      };
+    };
+  };
+}

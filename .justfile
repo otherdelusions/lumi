@@ -57,8 +57,3 @@ install target: _pre
 [doc('Zip up all of the repo contents')]
 zip:
     zip -r "./$(basename "$(pwd)")".zip . -x ".direnv/*" ".git/*"
-    
-[no-cd]
-[doc('Add/Remove underscore from a filename to make it invisible/visible to import-tree')]
-@toggle module:
-    m={{quote(module)}}; d=$(dirname -- "$m"); f=${m##*/}; case "$f" in _*) new="$d/${f#_}" ;; *) new="$d/_$f" ;; esac; echo "$m -> $new"; mv -T --update=none-fail -- "$m" "$new"

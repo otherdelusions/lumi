@@ -17,15 +17,6 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
 
-    den.url = "github:denful/den";
-
-    import-tree.url = "github:vic/import-tree";
-
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -47,7 +38,6 @@
       url = "github:nix-community/NUR";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
       };
     };
 
@@ -58,102 +48,101 @@
   };
 
   outputs =
-    inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [
-        inputs.den.flakeModule
-
-        (inputs.import-tree [
-          ./aspects
-          ./modules
-          ./packages
-        ])
-      ];
-
-      debug = true; # for nixd flake-parts expr
-
-      den.hosts.x86_64-linux = {
-        ash = {
-          users.ferret = { };
+    inputs@{ self, nixpkgs, ... }:
+    let
+      forAllSystems =
+        f: nixpkgs.lib.genAttrs [ "x86_64-linux" ] (system: f nixpkgs.legacyPackages.${system});
+      mkHost =
+        name:
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./modules/common.nix
+            (./hosts + "/${name}")
+          ];
         };
-
-        ember = {
-          desktop.terminal = "foot";
-
-          users.ferret = { };
-        };
-
-        interloper = { };
+    in
+    {
+      nixosConfigurations = {
+        ash = mkHost "ash";
+        ember = mkHost "ember";
+        interloper = mkHost "interloper";
       };
-
-      perSystem =
-        {
-          pkgs,
-          inputs',
-          ...
-        }:
-        {
-          formatter = pkgs.nixfmt-tree.override {
-            runtimeInputs = [ pkgs.yamlfmt ];
-            settings.formatter.yamlfmt = {
-              command = "yamlfmt";
-              includes = [
-                "*.yaml"
-                "*.yml"
-              ];
-            };
-          };
-
-          checks.formatting =
-            pkgs.runCommand "check-formatting"
-              {
-                nativeBuildInputs = with pkgs; [
-                  nixfmt
-                  deadnix
-                  statix
-                  yamlfmt
-                  actionlint
-                  markdownlint-cli
-                ];
-              }
-              ''
-                cd ${inputs.self}
-
-                echo "Running nixfmt..."
-                find . -type f -name '*.nix' -exec nixfmt --check {} +
-
-                echo "Running deadnix..."
-                deadnix --fail
-
-                echo "Running statix..."
-                statix check .
-
-                echo "Running yamlfmt & actionlint..."
-                find . -type f \( -name '*.yaml' -o -name '*.yml' \) -exec yamlfmt -lint {} +
-                find .github/workflows -type f \( -name '*.yaml' -o -name '*.yml' \) -exec actionlint {} +
-
-                echo "Running markdownlint..."
-                markdownlint --dot --disable MD013 MD033 -- .
-
-                touch "$out" # success
-              '';
-
-          devShells.default = pkgs.mkShell {
-            name = "lumi";
-
-            NIX_CONFIG = "extra-experimental-features = nix-command flakes";
-            DIRENV_WARN_TIMEOUT = "0s";
-
-            packages = with pkgs; [
-              nixd
-              nixfmt
-              statix
-              yamlfmt
-              just
-              nurl
-              inputs'.disko.packages.disko
+      nixosModules = {
+        monbooru = import ./modules/monbooru.nix;
+        zapret = import ./modules/zapret.nix;
+        librewolf = import ./modules/librewolf.nix;
+      };
+      packages = forAllSystems (pkgs: {
+        monbooru = pkgs.callPackage ./packages/monbooru.nix { };
+        morewaita-accent-icon-theme = pkgs.callPackage ./packages/morewaita-accent-icon-theme.nix { };
+      });
+      formatter = forAllSystems (
+        pkgs:
+        pkgs.nixfmt-tree.override {
+          runtimeInputs = [ pkgs.yamlfmt ];
+          settings.formatter.yamlfmt = {
+            command = "yamlfmt";
+            includes = [
+              "*.yaml"
+              "*.yml"
             ];
           };
+        }
+      );
+      checks = forAllSystems (pkgs: {
+        formatting =
+          pkgs.runCommand "check-formatting"
+            {
+              nativeBuildInputs = with pkgs; [
+                nixfmt
+                deadnix
+                statix
+                yamlfmt
+                actionlint
+                markdownlint-cli
+              ];
+            }
+            ''
+              cd ${self}
+
+              echo "Running nixfmt..."
+              find . -type f -name '*.nix' -exec nixfmt --check {} +
+
+              echo "Running deadnix..."
+              deadnix --fail
+
+              echo "Running statix..."
+              statix check .
+
+              echo "Running yamlfmt & actionlint..."
+              find . -type f \( -name '*.yaml' -o -name '*.yml' \) -exec yamlfmt -lint {} +
+              find .github/workflows -type f \( -name '*.yaml' -o -name '*.yml' \) -exec actionlint {} +
+
+              echo "Running markdownlint..."
+              markdownlint --dot --disable MD013 MD033 -- .
+
+              touch "$out" # success
+            '';
+      });
+      devShells = forAllSystems (pkgs: {
+        default = pkgs.mkShell {
+          name = "lumi";
+
+          NIX_CONFIG = "extra-experimental-features = nix-command flakes";
+          DIRENV_WARN_TIMEOUT = "0s";
+
+          packages = with pkgs; [
+            nixd
+            nixfmt
+            statix
+            yamlfmt
+            just
+            nurl
+            inputs.disko.packages.${pkgs.stdenv.hostPlatform.system}.disko
+          ];
         };
+      });
     };
 }
