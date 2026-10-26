@@ -29,6 +29,22 @@
         homelab = {
           baseDomain = "ash.local";
           dirs.content = "/mirror";
+          dirs.extra = map (d: "${hl.dirs.content}/${d}") [
+            "library"
+            "library/inbox"
+            "library/gallery"
+            "library/gallery/images"
+            "library/gallery/videos"
+            "library/music"
+            "library/extra"
+            "library/extra/gallery"
+            "library/extra/gallery/images"
+            "library/extra/gallery/videos"
+            "library/extra/manga"
+            "library/extra/manga/local"
+            "library/extra/manga/downloads"
+            "shared"
+          ];
         };
       };
   };
