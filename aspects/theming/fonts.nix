@@ -3,6 +3,8 @@
   den.aspects.theming.includes = [ den.aspects.theming.fonts ];
 
   den.aspects.theming.fonts = {
+    includes = [ den.aspects.theming.options ];
+
     provides.to-users.homeManager = { config, lib, ... }: {
       home.packages = with config.theme.fonts; [
         monospace.package

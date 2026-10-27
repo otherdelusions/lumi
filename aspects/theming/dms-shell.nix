@@ -3,6 +3,8 @@
   den.aspects.theming.includes = [ den.aspects.theming.dms-shell ];
 
   den.aspects.theming.dms-shell = {
+    includes = [ den.aspects.theming.options ];
+
     provides.to-users.homeManager =
       {
         config,

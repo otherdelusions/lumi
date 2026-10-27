@@ -3,6 +3,8 @@
   den.aspects.theming.includes = [ den.aspects.theming.helix ];
 
   den.aspects.theming.helix = {
+    includes = [ den.aspects.theming.options ];
+
     provides.to-users.homeManager =
       { config, ... }:
       let

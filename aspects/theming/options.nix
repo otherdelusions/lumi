@@ -1,5 +1,5 @@
 {
-  den.aspects.theming = {
+  den.aspects.theming.options = {
     provides.to-users.homeManager =
       {
         config,

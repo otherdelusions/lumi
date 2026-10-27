@@ -3,6 +3,8 @@
   den.aspects.theming.includes = [ den.aspects.theming.foot ];
 
   den.aspects.theming.foot = {
+    includes = [ den.aspects.theming.options ];
+
     provides.to-users.homeManager =
       { config, ... }:
       let

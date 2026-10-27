@@ -3,6 +3,8 @@
   den.aspects.theming.includes = [ den.aspects.theming.niri ];
 
   den.aspects.theming.niri = {
+    includes = [ den.aspects.theming.options ];
+
     provides.to-users.homeManager = { config, ... }: {
       wayland.windowManager.niri.settings =
         let

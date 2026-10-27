@@ -3,6 +3,8 @@
   den.aspects.theming.includes = [ den.aspects.theming.gtk ];
 
   den.aspects.theming.gtk = {
+    includes = [ den.aspects.theming.options ];
+
     provides.to-users.homeManager =
       {
         config,

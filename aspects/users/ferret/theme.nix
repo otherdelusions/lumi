@@ -1,33 +1,39 @@
-{ den, ... }:
 {
-  den.aspects.ferret.includes = [
-    (den.lib.policy.when ({ host, ... }: host.hasAspect den.aspects.theming) {
-      homeManager = { inputs', ... }: {
-        theme =
-          let
-            apple-fonts = inputs'.apple-fonts.packages;
-          in
-          {
-            wallPaper = "${../../../config/wallpaper}/qingyi.jpg";
+  den.aspects.ferret = {
+    homeManager =
+      {
+        inputs',
+        lib,
+        options,
+        ...
+      }:
+      {
+        config = lib.optionalAttrs (options ? theme) {
+          theme =
+            let
+              apple-fonts = inputs'.apple-fonts.packages;
+            in
+            {
+              wallPaper = "${../../../config/wallpaper}/qingyi.jpg";
 
-            fonts = {
-              monospace = {
-                package = apple-fonts.sf-mono-nerd;
-                name = "SFMono Nerd Font";
+              fonts = {
+                monospace = {
+                  package = apple-fonts.sf-mono-nerd;
+                  name = "SFMono Nerd Font";
+                };
+                sansSerif = {
+                  package = apple-fonts.sf-pro-nerd;
+                  name = "SFProDisplay Nerd Font";
+                };
+                serif = {
+                  package = apple-fonts.ny-nerd;
+                  name = "New York Nerd Font";
+                };
               };
-              sansSerif = {
-                package = apple-fonts.sf-pro-nerd;
-                name = "SFProDisplay Nerd Font";
-              };
-              serif = {
-                package = apple-fonts.ny-nerd;
-                name = "New York Nerd Font";
-              };
+
+              browser.librewolf.profileNames = [ "ferret" ];
             };
-
-            browser.librewolf.profileNames = [ "ferret" ];
-          };
+        };
       };
-    })
-  ];
+  };
 }
