@@ -100,7 +100,7 @@
         config = {
           homelab.services.copyparty.settings = {
             e2dsa = mkDefault true;
-            e2tsr = mkDefault true;
+            e2ts = mkDefault true;
             e2vu = mkDefault true;
             z = mkDefault true;
             i = mkDefault "0.0.0.0";
