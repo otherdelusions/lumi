@@ -22,14 +22,16 @@
       networking = {
         networkmanager.enable = true;
         enableIPv6 = false;
+        firewall.allowedUDPPorts = [ 5353 ]; # mdns reply
       };
 
       systemd.services.NetworkManager-wait-online.enable = false;
       boot.kernel.sysctl."net.ipv4.tcp_fastopen" = 0; # else DoT wont work
 
-      services.avahi = {
+      # mdns resolve
+      services.resolved = {
         enable = true;
-        nssmdns4 = true;
+        settings.Resolve.MulticastDNS = "resolve";
       };
 
       time.timeZone = "Europe/Moscow";
