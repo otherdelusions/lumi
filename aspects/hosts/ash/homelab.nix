@@ -3,7 +3,7 @@
   den.aspects.ash = {
     includes = with den.aspects.homelab.services; [
       avahi
-      copyparty
+      opencloud
     ];
 
     nixos =
@@ -15,19 +15,6 @@
       }:
       let
         hl = config.homelab;
-        copypartyTheme =
-          pkgs.runCommand "copyparty-drive-theme.html"
-            {
-              src = pkgs.fetchurl {
-                url = "https://raw.githubusercontent.com/Ransomwave/copyparty-drive-theme/590dc959bb42b66ace74b451d0ba8a919f0f66cb/drive.css";
-                hash = "sha256-RY/C55mQ0RzYEgyTBah844TMNvQB3A0L1wlivWA0CLQ=";
-              };
-            }
-            ''
-              echo '<style>' > "$out"
-              cat "$src" >> "$out"
-              echo '</style>' >> "$out"
-            '';
         mediaDirs = lib.unique (
           [ hl.dirs.content ] ++ lib.filter (lib.hasPrefix "${hl.dirs.content}/") hl.dirs.extra
         );
@@ -46,9 +33,9 @@
         };
 
         security.nix-secrets.secrets = {
-          "services/copyparty/ferret_pass" = {
+          "services/opencloud/ferret_pass" = {
             recipients = [ "ash" ];
-            owner = "homelab";
+            owner = config.services.opencloud.user;
           };
         };
 
@@ -56,38 +43,44 @@
           baseDomain = "ash.local";
           dirs.content = "/mirror";
           dirs.extra = map (d: "${hl.dirs.content}/${d}") [
-            "library"
-            "library/inbox"
-            "library/gallery"
-            "library/gallery/images"
-            "library/gallery/videos"
-            "library/music"
-            "library/extra"
-            "library/extra/gallery"
-            "library/extra/gallery/images"
-            "library/extra/gallery/videos"
-            "library/extra/manga"
-            "library/extra/manga/local"
-            "library/extra/manga/downloads"
-            "shared"
+            "galleries"
+            "galleries/default"
+            "galleries/default/images"
+            "galleries/default/videos"
+            "galleries/extra"
+            "galleries/extra/images"
+            "galleries/extra/videos"
+            "music"
+            "manga"
+            "manga/local"
+            "manga/downloads"
           ];
 
-          services.copyparty = {
+          services.opencloud = {
             port = 4901;
-            openFirewall = true;
-            settings = {
-              xvol = true;
-              html-head = "@${copypartyTheme}";
-              ui-filesz = 3;
+            storageDir = "/srv/opencloud";
+            environmentFile = config.security.nix-secrets.secrets."services/opencloud/ferret_pass".path;
+
+            euroOffice = {
+              enable = true;
+              useMSFonts = true;
+              port = 4902;
             };
 
-            accounts.ferret.passwordFile =
-              config.security.nix-secrets.secrets."services/copyparty/ferret_pass".path;
+            settings = {
+              web.web.config.options = {
+                disableSponsorLink = true;
+                disableFeedbackLink = true;
+              };
 
-            volumes."/" = {
-              path = hl.dirs.content;
-              access.A = "ferret";
-              flags.scan = 60;
+              frontend.archiver.max_size = 10737418240;
+
+              storage-users.drivers.posix.personalspacepath_template = "users/{{.User.Username}}";
+            };
+
+            apps.calculator = pkgs.fetchzip {
+              url = "https://github.com/opencloud-eu/web-extensions/releases/download/calculator-v2.1.0/calculator-2.1.0.zip";
+              hash = "sha256-fm5r2THXdwklsEqblCbtBlWhzvUknQtGs0CoE9WFu1A=";
             };
           };
         };

@@ -99,6 +99,15 @@
               mountpoint = "/srv/forgejo";
               options.mountpoint = "legacy";
             };
+
+            opencloud = {
+              type = "zfs_fs";
+              mountpoint = "/srv/opencloud";
+              options = {
+                mountpoint = "legacy";
+                xattr = "sa";
+              };
+            };
           };
         };
       };
