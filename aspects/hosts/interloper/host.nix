@@ -24,9 +24,9 @@
 
       services.avahi = {
         enable = true;
-        publish = {
-          enable = true;
-          addresses = true;
+        settings.publish = {
+          disable-publishing = false;
+          publish-addresses = true;
         };
       };
     };

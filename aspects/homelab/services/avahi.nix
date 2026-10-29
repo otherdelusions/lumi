@@ -15,11 +15,11 @@
         openFirewall = true;
         nssmdns4 = true;
 
-        publish = {
-          enable = true;
-          userServices = true;
-          workstation = true;
-          domain = true;
+        settings.publish = {
+          disable-publishing = false;
+          disable-user-service-publishing = false;
+          publish-workstation = true;
+          publish-domain = true;
         };
       };
     };
