@@ -119,6 +119,7 @@
           {
             services.opencloud = {
               enable = true;
+              package = pkgs.opencloud;
               stateDir = cfg.dataDir;
               address = mkDefault "0.0.0.0";
               url = mkDefault "https://${hl.baseDomain}:${toString cfg.port}";
