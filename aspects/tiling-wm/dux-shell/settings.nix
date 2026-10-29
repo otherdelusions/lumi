@@ -1,10 +1,10 @@
 { den, ... }:
 {
-  den.aspects.tiling-wm.dms-shell.includes = [ den.aspects.tiling-wm.dms-shell.settings ];
+  den.aspects.tiling-wm.dux-shell.includes = [ den.aspects.tiling-wm.dux-shell.settings ];
 
-  den.aspects.tiling-wm.dms-shell.settings = {
+  den.aspects.tiling-wm.dux-shell.settings = {
     provides.to-users.homeManager = {
-      programs.dms-shell.settings = {
+      programs.dux-shell.settings = {
         widgetBackgroundColor = "sth";
         cornerRadius = 0;
         runUserMatugenTemplates = false;

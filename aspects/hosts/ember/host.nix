@@ -15,7 +15,7 @@
       ];
 
     provides.ferret.nixos = { config, user, ... }: {
-      services.displayManager.dms-greeter.configHome = config.users.users.${user.userName}.home;
+      services.displayManager.dux-greeter.configHome = config.users.users.${user.userName}.home;
     };
 
     nixos = { pkgs, ... }: {

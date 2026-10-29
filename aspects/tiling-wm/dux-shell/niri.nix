@@ -1,8 +1,8 @@
 { den, ... }:
 {
-  den.aspects.tiling-wm.dms-shell.includes = [ den.aspects.tiling-wm.dms-shell.niri ];
+  den.aspects.tiling-wm.dux-shell.includes = [ den.aspects.tiling-wm.dux-shell.niri ];
 
-  den.aspects.tiling-wm.dms-shell.niri = {
+  den.aspects.tiling-wm.dux-shell.niri = {
     provides.to-users.homeManager = { config, ... }: {
       wayland.windowManager.niri.extraConfig = ''
         include optional=true "${config.xdg.configHome}/niri/dms/alttab.kdl"

@@ -1,8 +1,8 @@
 { den, ... }:
 {
-  den.aspects.tiling-wm.includes = [ den.aspects.tiling-wm.dms-shell ];
+  den.aspects.tiling-wm.includes = [ den.aspects.tiling-wm.dux-shell ];
 
-  den.aspects.tiling-wm.dms-shell = {
+  den.aspects.tiling-wm.dux-shell = {
     provides.to-users.homeManager =
       {
         pkgs,
@@ -11,11 +11,11 @@
         ...
       }:
       let
-        cfg = config.programs.dms-shell;
+        cfg = config.programs.dux-shell;
         jsonFormat = pkgs.formats.json { };
       in
       {
-        options.programs.dms-shell = {
+        options.programs.dux-shell = {
           settings = lib.mkOption {
             inherit (jsonFormat) type;
             default = { };
@@ -29,16 +29,16 @@
         };
 
         config = {
-          xdg.stateFile."DankMaterialShell/session.json" = lib.mkIf (cfg.session != { }) {
+          xdg.stateFile."dms/session.json" = lib.mkIf (cfg.session != { }) {
             source = jsonFormat.generate "session.json" cfg.session;
           };
 
-          xdg.configFile."DankMaterialShell/settings.json" = lib.mkIf (cfg.settings != { }) {
+          xdg.configFile."dms/settings.json" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "settings.json" cfg.settings;
           };
         };
       };
 
-    nixos.programs.dms-shell.enable = true;
+    nixos.programs.dux-shell.enable = true;
   };
 }

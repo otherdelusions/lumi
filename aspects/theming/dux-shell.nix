@@ -1,8 +1,8 @@
 { den, ... }:
 {
-  den.aspects.theming.includes = [ den.aspects.theming.dms-shell ];
+  den.aspects.theming.includes = [ den.aspects.theming.dux-shell ];
 
-  den.aspects.theming.dms-shell = {
+  den.aspects.theming.dux-shell = {
     includes = [ den.aspects.theming.options ];
 
     provides.to-users.homeManager =
@@ -14,14 +14,14 @@
         ...
       }:
       {
-        programs = lib.optionalAttrs (options ? programs.dms-shell) {
-          dms-shell.session = lib.mkIf (config.theme.wallPaper != null) {
+        programs = lib.optionalAttrs (options ? programs.dux-shell) {
+          dux-shell.session = lib.mkIf (config.theme.wallPaper != null) {
             wallpaperPath = config.theme.wallPaper;
             wallpaperPathLight = config.theme.wallPaper;
             wallpaperPathDark = config.theme.wallPaper;
           };
 
-          dms-shell.settings = {
+          dux-shell.settings = {
             fontFamily = config.theme.fonts.sansSerif.name;
             monoFontFamily = config.theme.fonts.monospace.name;
             greeterFontFamily = config.theme.fonts.sansSerif.name;

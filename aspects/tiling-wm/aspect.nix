@@ -1,5 +1,5 @@
 {
   den.aspects.tiling-wm = {
-    nixos.services.displayManager.dms-greeter.compositor.name = "niri";
+    nixos.services.displayManager.dux-greeter.compositor.name = "niri";
   };
 }
