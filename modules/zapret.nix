@@ -4,6 +4,7 @@
       pkgs,
       lib,
       config,
+      utils,
       ...
     }:
 
@@ -76,6 +77,7 @@
 
       cfg = config.netsec.zapret;
       serviceCfg = config.services.zapret;
+      excludedHosts = pkgs.writeText "zapret-excluded-hosts" (lib.concatLines cfg.excludeHosts);
 
       firstPackets = "-m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6";
       queue = "-m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num ${toString serviceCfg.qnum} --queue-bypass";
@@ -88,7 +90,14 @@
         strategy = lib.mkOption {
           type = lib.types.enum (lib.attrNames strategies);
           default = lib.last (lib.attrNames strategies);
-          description = "Zapret strategy to use";
+          description = "Zapret strategy to use.";
+        };
+
+        excludeHosts = lib.mkOption {
+          type = lib.types.listOf (lib.types.strMatching "[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?");
+          default = [ ];
+          example = [ "nix-community.cachix.org" ];
+          description = "Domains to leave unmodified on TCP ports 80, 443 and 8443.";
         };
       };
 
@@ -97,7 +106,15 @@
           enable = true;
           udpSupport = true;
           inherit (strategies.${cfg.strategy}) udpPorts;
-          params = strategies.${cfg.strategy}.filters;
+          params =
+            lib.optional (cfg.excludeHosts != [ ]) (
+              utils.escapeSystemdExecArgs [
+                "--filter-tcp=80,443,8443"
+                "--hostlist=${excludedHosts}"
+                "--new"
+              ]
+            )
+            ++ strategies.${cfg.strategy}.filters;
         };
 
         networking = {

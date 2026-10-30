@@ -10,6 +10,11 @@
         enable = true;
         addHosts = true;
         strategy = "s2_any";
+        excludeHosts = [
+          "cache.nixos.org"
+          "cache.numtide.com"
+          "cachix.org"
+        ];
       };
     };
   };
