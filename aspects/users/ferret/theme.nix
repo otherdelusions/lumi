@@ -14,7 +14,7 @@
               apple-fonts = inputs'.apple-fonts.packages;
             in
             {
-              wallPaper = "${../../../config/wallpaper}/qingyi.jpg";
+              wallPaper = "${../../../config/wallpaper}/aeternum.png";
 
               fonts = {
                 monospace = {
