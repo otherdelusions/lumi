@@ -15,7 +15,8 @@ jobs:
         with:
           name: lumi
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-      - run: |
+      - name: build flake outputs
+        run: |
           nix flake check --print-build-logs
           nix build --print-build-logs --no-link --impure --expr \
             'builtins.attrValues (builtins.getAttr builtins.currentSystem (builtins.getFlake (toString ./.)).packages)'
