@@ -5,6 +5,7 @@
       server
       homelab
       theming.helix
+      theming.starship
     ];
 
     nixos = {

@@ -8,108 +8,70 @@
     provides.to-users.homeManager =
       { config, ... }:
       let
-        inherit (config.theme.colors.withHashtag)
-          base00
-          base01
-          base02
-          base03
-          base04
-          base05
-          base06
-          base07
-          base08
-          base09
-          base0A
-          base0B
-          base0C
-          base0D
-          base0E
-          base0F
-          ;
-
         inherit (config.theme) name;
       in
       {
         programs.helix = {
           settings.theme = name;
 
-          themes.${name} = {
-            "attribute" = base09;
+          themes.${name} = with config.theme.colors.withHashtag; {
+            "attribute" = base0B;
             "comment" = {
               fg = base03;
               modifiers = [ "italic" ];
             };
-            "constant" = base09;
-            "constant.character.escape" = base0C;
-            "constant.numeric" = base09;
-            "constructor" = base0D;
-            "debug" = base03;
+            "constant" = base07;
+            "constant.numeric" = base0B;
+            "constructor" = base07;
+            "debug" = base04;
             "diagnostic" = {
               modifiers = [ "underlined" ];
             };
-            "diff.delta" = base09;
-            "diff.minus" = base08;
-            "diff.plus" = base0B;
-            "error" = base08;
-            "function" = base0D;
-            "hint" = base03;
-            "info" = base0D;
-            "keyword" = base0E;
-            "label" = base0E;
-            "namespace" = base0E;
-            "operator" = base05;
-            "special" = base0D;
-            "string" = base0B;
-            "tag" = base08;
-            "type" = base0A;
-            "variable" = base08;
-            "variable.other.member" = base0D;
-            "warning" = base09;
+            "diff.delta" = base0C;
+            "diff.minus" = base09;
+            "diff.plus" = base0F;
+            "error" = base09;
+            "function" = base07;
+            "hint" = base04;
+            "info" = base07;
+            "keyword" = {
+              fg = base07;
+              modifiers = [ "bold" ];
+            };
+            "label" = base07;
+            "namespace" = base07;
+            "operator" = base07;
+            "special" = base07;
+            "string" = base0F;
+            "tag" = base07;
+            "type" = base0B;
+            "variable" = base04;
+            "variable.other.member" = base07;
+            "warning" = base0C;
 
             "markup.bold" = {
-              fg = base0A;
+              fg = base07;
               modifiers = [ "bold" ];
             };
-            "markup.heading.1" = {
-              fg = base0D;
-              modifiers = [ "bold" ];
-            };
-            "markup.heading.2" = {
-              fg = base08;
-              modifiers = [ "bold" ];
-            };
-            "markup.heading.3" = {
-              fg = base09;
-              modifiers = [ "bold" ];
-            };
-            "markup.heading.4" = {
-              fg = base0A;
-              modifiers = [ "bold" ];
-            };
-            "markup.heading.5" = {
-              fg = base0B;
-              modifiers = [ "bold" ];
-            };
-            "markup.heading.6" = {
-              fg = base0C;
+            "markup.heading" = {
+              fg = base07;
               modifiers = [ "bold" ];
             };
             "markup.italic" = {
-              fg = base0E;
+              fg = base07;
               modifiers = [ "italic" ];
             };
-            "markup.link.text" = base08;
+            "markup.link.text" = base07;
             "markup.link.url" = {
-              fg = base09;
+              fg = base07;
               modifiers = [ "underlined" ];
             };
-            "markup.list" = base08;
-            "markup.quote" = base0C;
-            "markup.raw" = base0B;
+            "markup.list" = base04;
+            "markup.quote" = base07;
+            "markup.raw" = base07;
             "markup.strikethrough" = {
               modifiers = [ "crossed_out" ];
             };
-
             "diagnostic.hint" = {
               underline.style = "curl";
             };
@@ -127,8 +89,8 @@
               bg = base00;
             };
             "ui.bufferline.active" = {
-              fg = base00;
-              bg = base03;
+              fg = base05;
+              bg = base02;
               modifiers = [ "bold" ];
             };
             "ui.bufferline" = {
@@ -136,7 +98,7 @@
               bg = base00;
             };
             "ui.cursor" = {
-              fg = base06;
+              fg = base07;
               modifiers = [ "reversed" ];
             };
             "ui.cursor.primary" = {
@@ -144,7 +106,6 @@
               modifiers = [ "reversed" ];
             };
             "ui.cursorline.primary" = {
-              fg = base05;
               bg = base01;
             };
             "ui.cursor.match" = {
@@ -160,11 +121,11 @@
               bg = base00;
             };
             "ui.help" = {
-              fg = base06;
-              bg = base01;
+              fg = base05;
+              bg = base02;
             };
             "ui.linenr" = {
-              fg = base03;
+              fg = base04;
               bg = base00;
             };
             "ui.linenr.selected" = {
@@ -174,87 +135,60 @@
             };
             "ui.menu" = {
               fg = base05;
-              bg = base01;
-            };
-            "ui.menu.scroll" = {
-              fg = base03;
-              bg = base01;
-            };
-            "ui.menu.selected" = {
-              fg = base01;
-              bg = base04;
-            };
-            "ui.popup" = {
-              bg = base01;
-            };
-            "ui.selection" = {
               bg = base02;
             };
-            "ui.selection.primary" = {
+            "ui.menu.scroll" = {
+              fg = base04;
+              bg = base02;
+            };
+            "ui.menu.selected" = {
+              fg = base05;
+              bg = base01;
+            };
+            "ui.popup" = {
+              bg = base02;
+            };
+            "ui.selection" = {
+              fg = base05;
               bg = base02;
             };
             "ui.statusline" = {
               fg = base04;
               bg = base01;
             };
-            "ui.statusline.inactive" = {
-              bg = base01;
-              fg = base03;
-            };
             "ui.statusline.insert" = {
               fg = base00;
-              bg = base0B;
+              bg = base07;
             };
             "ui.statusline.normal" = {
-              fg = base00;
-              bg = base03;
+              fg = base05;
+              bg = base02;
             };
             "ui.statusline.select" = {
-              fg = base00;
-              bg = base0F;
+              fg = base05;
+              bg = base06;
             };
-            "ui.text" = base05;
-            "ui.text.directory" = base0D;
+            "ui.text" = base04;
+            "ui.text.directory" = base07;
             "ui.text.focus" = base05;
             "ui.virtual.indent-guide" = {
-              fg = base03;
+              fg = base02;
             };
             "ui.virtual.inlay-hint" = {
-              fg = base03;
+              fg = base04;
             };
             "ui.virtual.ruler" = {
               bg = base01;
             };
             "ui.virtual.jump-label" = {
-              fg = base0A;
+              fg = base07;
               modifiers = [ "bold" ];
             };
             "ui.virtual.whitespace" = {
-              fg = base03;
+              fg = base02;
             };
             "ui.window" = {
-              bg = base01;
-            };
-
-            palette = {
-              inherit
-                base00
-                base01
-                base02
-                base03
-                base04
-                base05
-                base06
-                base07
-                base08
-                base09
-                base0A
-                base0B
-                base0C
-                base0D
-                base0E
-                base0F
-                ;
+              fg = base03;
             };
           };
         };

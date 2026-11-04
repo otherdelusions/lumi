@@ -9,22 +9,56 @@
       }:
       let
         colorDefaults = {
-          base00 = "151616";
-          base01 = "192121";
-          base02 = "343636";
-          base03 = "424c4c";
-          base04 = "d7dede";
-          base05 = "efefef";
-          base06 = "fefeff";
-          base07 = "fefeff";
-          base08 = "ea6637";
-          base09 = "f7961a";
-          base0A = "fbb627";
-          base0B = "1ccbaf";
-          base0C = "18cdc4";
-          base0D = "11c9de";
-          base0E = "f184d6";
-          base0F = "61ccb6";
+          base00 = "111111";
+          base01 = "2e2e2e";
+          base02 = "3f3f3f";
+          base03 = "7f7f7f";
+          base04 = "dbdedf";
+          base05 = "ffffff";
+          base06 = "0070f0";
+          base07 = "00b7f1";
+          base08 = "1aebf1";
+          base09 = "f4424c";
+          base0A = "ff3964";
+          base0B = "fb8f05";
+          base0C = "f6bc16";
+          base0D = "f7e396";
+          base0E = "c2fc32";
+          base0F = "00ff77";
+        };
+
+        colorOptions =
+          defaults:
+          mapAttrs (
+            _: default:
+            mkOption {
+              type = strMatching "[0-9a-fA-F]{6}";
+              inherit default;
+            }
+          ) defaults;
+
+        colorFormats = colors: names: {
+          withHashtag = mkOption {
+            type = attrsOf str;
+            readOnly = true;
+            default = genAttrs names (name: "#${colors.${name}}");
+          };
+
+          withRgb = mkOption {
+            type = attrsOf (attrsOf int);
+            readOnly = true;
+            default = genAttrs names (
+              name:
+              let
+                channel = start: lib.fromHexString (builtins.substring start 2 colors.${name});
+              in
+              {
+                r = channel 0;
+                g = channel 2;
+                b = channel 4;
+              }
+            );
+          };
         };
 
         supportedBrowsers = [
@@ -66,36 +100,7 @@
           };
 
           colors =
-            mapAttrs (
-              _: default:
-              mkOption {
-                type = strMatching "[0-9a-fA-F]{6}";
-                inherit default;
-              }
-            ) colorDefaults
-            // {
-              withHashtag = mkOption {
-                type = attrsOf str;
-                readOnly = true;
-                default = genAttrs (builtins.attrNames colorDefaults) (name: "#${config.theme.colors.${name}}");
-              };
-
-              withRgb = mkOption {
-                type = attrsOf (attrsOf int);
-                readOnly = true;
-                default = genAttrs (builtins.attrNames colorDefaults) (
-                  name:
-                  let
-                    channel = start: lib.fromHexString (builtins.substring start 2 config.theme.colors.${name});
-                  in
-                  {
-                    r = channel 0;
-                    g = channel 2;
-                    b = channel 4;
-                  }
-                );
-              };
-            };
+            colorOptions colorDefaults // colorFormats config.theme.colors (builtins.attrNames colorDefaults);
 
           fonts = {
             monospace = mkOption {

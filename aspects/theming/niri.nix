@@ -6,28 +6,24 @@
     includes = [ den.aspects.theming.options ];
 
     provides.to-users.homeManager = { config, ... }: {
-      wayland.windowManager.niri.settings =
-        let
-          inherit (config.theme) colors;
-        in
-        {
-          overview.backdrop-color = colors.withHashtag.base00;
+      wayland.windowManager.niri.settings = with config.theme.colors.withHashtag; {
+        overview.backdrop-color = base00;
 
-          cursor = {
-            xcursor-theme = config.theme.cursor.name;
-            xcursor-size = config.theme.cursor.size;
-          };
-
-          layout = {
-            background-color = colors.withHashtag.base00;
-            border = {
-              on = { };
-              active-color = colors.withHashtag.base0B;
-              inactive-color = colors.withHashtag.base03;
-            };
-            focus-ring.off = { };
-          };
+        cursor = {
+          xcursor-theme = config.theme.cursor.name;
+          xcursor-size = config.theme.cursor.size;
         };
+
+        layout = {
+          background-color = base00;
+          border = {
+            on = { };
+            active-color = base08;
+            inactive-color = base00;
+          };
+          focus-ring.off = { };
+        };
+      };
     };
   };
 }

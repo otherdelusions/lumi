@@ -15,51 +15,62 @@
       }:
       {
         programs = lib.optionalAttrs (options ? programs.dux-shell) {
-          dux-shell.session = lib.mkIf (config.theme.wallPaper != null) {
+          dux-shell.session = lib.optionalAttrs (config.theme.wallPaper != null) {
             wallpaperPath = config.theme.wallPaper;
-            wallpaperPathLight = config.theme.wallPaper;
-            wallpaperPathDark = config.theme.wallPaper;
           };
 
           dux-shell.settings = {
             fontFamily = config.theme.fonts.sansSerif.name;
             monoFontFamily = config.theme.fonts.monospace.name;
-            greeterFontFamily = config.theme.fonts.sansSerif.name;
             fontScale = 1.14;
 
             currentThemeName = "custom";
-            customThemeFile = lib.mkForce (
+            customThemeFile =
               let
-                inherit (config.theme) colors;
-                theme = with colors.withHashtag; {
+                theme = with config.theme.colors.withHashtag; {
                   inherit (config.theme) name;
-                  primary = base0B;
+                  primary = base08; # active controls (volume fill, toggle)
                   primaryText = base00;
-                  primaryContainer = base0C;
-                  secondary = base09;
-                  surface = base00;
-                  surfaceText = base05;
-                  surfaceVariant = base00;
-                  surfaceVariantText = base05;
-                  surfaceTint = base0D;
+                  primaryContainer = base07;
+                  secondary = base07; # secondary fills (unchosen options, unfilled slider track)
+                  tertiary = base08; # supporting accents (secondary chart lines)
+
+                  containerTint = 1; # buttons, clock card
+                  selectedContainerTint = 0; # selected rows
+
                   background = base00;
-                  backgroundText = base06;
+                  backgroundText = base04;
+                  surface = base00; # panels (launcher, settings, control center)
+                  surfaceText = base04; # main text and icons (titles, button labels)
+                  surfaceContainerLowest = "#0b0b0b";
+                  surfaceContainerLow = "#202020";
+                  surfaceContainer = base01;
+                  surfaceContainerHigh = base02;
+                  surfaceContainerHighest = "#505050";
+                  surfaceVariant = base02; # overlays
+                  surfaceVariantText = base04; # secondary text (setting descriptions)
+                  surfaceTint = base08;
                   outline = base03;
-                  surfaceContainer = base00;
-                  surfaceContainerHigh = base01;
-                  surfaceContainerHighest = base02;
-                  error = base08;
-                  warning = base0A;
-                  info = base0C;
+
+                  error = base0A;
+                  errorText = base00;
+                  warning = base0C;
+                  info = base07;
+                  success = base0F;
+
+                  accents = {
+                    red = base09;
+                    orange = base0B;
+                    yellow = base0C;
+                    green = base0E;
+                    teal = base0F;
+                    blue = base07;
+                    purple = base08;
+                    pink = base0A;
+                  };
                 };
               in
-              pkgs.writeText "dankMaterialShell-${config.theme.name}-color-theme.json" (
-                lib.toJSON {
-                  dark = theme;
-                  light = theme;
-                }
-              )
-            );
+              pkgs.writeText "dux-shell-${config.theme.name}-color-theme.json" (lib.toJSON theme);
           };
         };
       };
