@@ -17,6 +17,7 @@
         config.wayland.windowManager.niri.settings = {
           prefer-no-csd = { };
           hotkey-overlay.skip-at-startup = { };
+          gestures.hot-corners.off = { };
 
           output = {
             _args = [ "${config.wayland.windowManager.niri.mainOutput}" ];
