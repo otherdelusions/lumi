@@ -16,8 +16,8 @@
             foreground = base04;
             background = base00;
             cursor = "${base00} ${base07}";
-            selection-foreground = base04;
-            selection-background = base08;
+            selection-foreground = base05;
+            selection-background = base02;
             search-box-no-match = "${base00} ${base09}";
             search-box-match = "${base00} ${base07}";
             urls = base07;
