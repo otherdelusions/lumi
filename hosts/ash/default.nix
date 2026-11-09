@@ -1,40 +1,55 @@
-{ lib, ... }:
+{ config, ... }:
 {
   imports = [
-    ../../users/ferret.nix
-    ../../modules/zfs.nix
+    ./users.nix
+    ./home.nix
     ./hardware.nix
     ./disko.nix
-    ./storage.nix
-    ./users.nix
     ./services
   ];
 
-  networking.hostName = "ash";
-  networking.interfaces.eno1.wakeOnLan.enable = true;
-  documentation.man.cache.enable = false;
-
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      configurationLimit = lib.mkDefault 5;
+  _module.args.homelab = {
+    baseDomain = "${config.networking.hostName}.local";
+    address = "0.0.0.0";
+    user = "homelab";
+    group = "homelab";
+    dirs = {
+      content = "/mirror";
+      data = "/var/lib/homelab";
+      extra = [
+        "/mirror/galleries"
+        "/mirror/galleries/default"
+        "/mirror/galleries/extra"
+        "/mirror/music"
+        "/mirror/manga"
+        "/mirror/manga/local"
+        "/mirror/manga/downloads"
+      ];
     };
-    timeout = lib.mkDefault 3;
-    efi.canTouchEfiVariables = true;
   };
 
-  fonts.fontconfig.enable = lib.mkDefault false;
+  security.nix-secrets = {
+    identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+    recipientAliases.ash = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGpEpH0wV2JehS/7fDYFKWZfkFeLcQ/opZAtLoVxfQrH root@ash";
+  };
+
+  networking.interfaces.eno1.wakeOnLan.enable = true;
+  documentation.man.cache.enable = false;
+  services.zfs.autoScrub.enable = true;
+  fonts.fontconfig.enable = false;
+
   xdg = {
-    autostart.enable = lib.mkDefault false;
-    icons.enable = lib.mkDefault false;
-    menus.enable = lib.mkDefault false;
-    mime.enable = lib.mkDefault false;
-    sounds.enable = lib.mkDefault false;
+    autostart.enable = false;
+    icons.enable = false;
+    menus.enable = false;
+    mime.enable = false;
+    sounds.enable = false;
   };
 
   services.openssh = {
     enable = true;
     openFirewall = true;
+
     settings = {
       X11Forwarding = false;
       UseDns = false;
@@ -44,9 +59,4 @@
       KbdInteractiveAuthentication = false;
     };
   };
-
-  users.users.ferret.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGyfwM5xpexbGKqVwGGOUvsIUjafEAmkFR3mgyMNRoLe ferret@ember"
-  ];
-
 }

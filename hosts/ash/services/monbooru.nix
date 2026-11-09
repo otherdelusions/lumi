@@ -1,43 +1,40 @@
-{ config, inputs, ... }:
+{
+  homelab,
+  config,
+  self,
+  pkgs,
+  ...
+}:
 let
-  cfg = config.services.monbooru;
   port = 8455;
 in
 {
-  imports = [ ../../../modules/monbooru.nix ];
-  nixpkgs.overlays = [
-    (_final: prev: { monbooru = inputs.self.packages.${prev.stdenv.hostPlatform.system}.monbooru; })
-  ];
+  imports = [ self.nixosModules.monbooru ];
+
   services.monbooru = {
     enable = true;
+    package = self.packages.${pkgs.stdenv.hostPlatform.system}.monbooru;
     openFirewall = true;
-    user = "homelab";
-    group = "homelab";
+    inherit (homelab) user group;
     timeZone = config.time.timeZone;
-    dataDir = "/var/lib/homelab/services/monbooru";
+    dataDir = "${homelab.dirs.data}/services/monbooru";
+
     settings = {
       server = {
-        bind_address = "0.0.0.0:${toString port}";
-        base_url = "http://${config.networking.hostName}.local:${toString port}";
+        bind_address = "${homelab.address}:${toString port}";
+        base_url = "http://${homelab.baseDomain}:${toString port}";
       };
+
       galleries = [
         {
-          name = "images";
-          gallery_path = "/mirror/images";
+          name = "default";
+          gallery_path = "${homelab.dirs.content}/galleries/default";
+        }
+        {
+          name = "extra";
+          gallery_path = "${homelab.dirs.content}/galleries/extra";
         }
       ];
     };
   };
-  systemd.tmpfiles.settings.monbooru-media = builtins.listToAttrs (
-    map (gallery: {
-      name = gallery.gallery_path;
-      value = {
-        d = {
-          mode = "2775";
-          inherit (cfg) user group;
-        };
-        "a+".argument = "u::rwx,g::rwx,o::rx,d:u::rwx,d:g::rwx,d:o::rx";
-      };
-    }) cfg.settings.galleries
-  );
 }

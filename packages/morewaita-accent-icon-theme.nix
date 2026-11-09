@@ -33,7 +33,6 @@ stdenv.mkDerivation {
   nativeBuildInputs = [
     gtk3
   ];
-  buildInputs = [ adwaita-icon-theme ];
   propagatedBuildInputs = [
     morewaita-icon-theme
     adwaita-icon-theme

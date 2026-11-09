@@ -10,6 +10,19 @@
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   boot = {
+    loader = {
+      grub = {
+        enable = true;
+        efiSupport = true;
+        configurationLimit = 5;
+        device = "nodev";
+        timeoutStyle = "hidden";
+      };
+
+      timeout = 0;
+      efi.canTouchEfiVariables = true;
+    };
+
     initrd.availableKernelModules = [
       "xhci_pci"
       "ahci"
@@ -28,6 +41,7 @@
 
   hardware = {
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
     graphics = {
       enable = true;
       extraPackages = with pkgs; [

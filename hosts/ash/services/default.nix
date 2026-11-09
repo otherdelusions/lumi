@@ -1,23 +1,20 @@
 {
   imports = [
-    # Enable services by importing their configuration here.
-    # ./copyparty.nix
-    # ./monbooru.nix
-    # ./navidrome.nix
-    # ./suwayomi.nix
-    # ./forgejo.nix
-    # ./samba.nix
+    ./base.nix
+    ./opencloud.nix
   ];
 
   services.avahi = {
     enable = true;
     openFirewall = true;
     nssmdns4 = true;
-    publish = {
-      enable = true;
-      userServices = true;
-      workstation = true;
-      domain = true;
+
+    settings.publish = {
+      disable-publishing = false;
+      disable-user-service-publishing = false;
+      publish-addresses = true;
+      publish-workstation = true;
+      publish-domain = true;
     };
   };
 }

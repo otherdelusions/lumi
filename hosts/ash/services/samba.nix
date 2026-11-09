@@ -1,8 +1,9 @@
-{ config, ... }:
+{ homelab, config, ... }:
 {
   services.samba = {
     enable = true;
     openFirewall = true;
+
     settings = {
       global = {
         workgroup = "WORKGROUP";
@@ -14,8 +15,9 @@
         "map to guest" = "bad user";
         "passdb backend" = "tdbsam";
       };
+
       media = {
-        path = "/mirror";
+        path = homelab.dirs.content;
         browseable = "yes";
         "read only" = "no";
         "guest ok" = "no";
@@ -23,12 +25,10 @@
       };
     };
   };
+
   services.samba-wsdd = {
     enable = true;
     discovery = true;
-  };
-  networking.firewall = {
-    allowedTCPPorts = [ 5357 ];
-    allowedUDPPorts = [ 3702 ];
+    openFirewall = true;
   };
 }

@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ homelab, inputs, ... }:
 {
   imports = [
     inputs.disko.nixosModules.disko
@@ -84,7 +84,7 @@
         datasets = {
           data = {
             type = "zfs_fs";
-            mountpoint = "/mirror";
+            mountpoint = homelab.dirs.content;
             options = {
               mountpoint = "legacy";
               recordsize = "1M";
@@ -97,6 +97,15 @@
             type = "zfs_fs";
             mountpoint = "/srv/forgejo";
             options.mountpoint = "legacy";
+          };
+
+          opencloud = {
+            type = "zfs_fs";
+            mountpoint = "/srv/opencloud";
+            options = {
+              mountpoint = "legacy";
+              xattr = "sa";
+            };
           };
         };
       };

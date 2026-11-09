@@ -1,19 +1,18 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   imports = [
-    ../../users/ferret.nix
+    ./users.nix
+    ./home.nix
     ./hardware.nix
     ./firmware.nix
     ./disko.nix
-    ./desktop.nix
+    ./desktop
     ./laptop.nix
     ./networking.nix
-    ./librewolf
   ];
 
-  networking.hostName = "ember";
-  time.timeZone = "Europe/Moscow";
   documentation.man.cache.enable = false;
+  time.timeZone = "Europe/Moscow";
 
   environment.systemPackages = with pkgs; [
     loupe
@@ -24,17 +23,4 @@
     bubblewrap
     mcp-nixos
   ];
-
-  security.nix-secrets.secrets."ssh_keys/to_ash" = {
-    recipients = [ "ferret" ];
-    owner = "ferret";
-  };
-
-  home-manager.users.ferret = {
-    imports = [ ../../home/ferret/desktop ];
-    programs.ssh.settings.ash = {
-      IdentityFile = config.security.nix-secrets.secrets."ssh_keys/to_ash".path;
-      IdentitiesOnly = true;
-    };
-  };
 }

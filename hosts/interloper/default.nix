@@ -6,11 +6,19 @@
 }:
 {
   imports = [
-    ../../modules/zfs.nix
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
   ];
-  networking.hostName = "interloper";
+
+  system.stateVersion = "26.05";
+
+  networking.hostId = "8425e349";
+
+  boot.zfs = {
+    package = pkgs.zfs_unstable;
+    forceImportRoot = false;
+  };
+
   networking.firewall.enable = false;
   systemd.services.NetworkManager-wait-online.enable = false;
 
@@ -24,15 +32,16 @@
       echo
     fi
   '';
+
   services = {
-    zfs.autoScrub.enable = false;
     avahi = {
       enable = true;
-      publish = {
-        enable = true;
-        addresses = true;
+      settings.publish = {
+        disable-publishing = false;
+        publish-addresses = true;
       };
     };
+
     openssh = {
       enable = true;
       settings = {
@@ -41,11 +50,10 @@
       };
     };
   };
+
   security.pam.services.sshd.allowNullPassword = true;
-  environment.systemPackages = [
-    inputs.disko.packages.${pkgs.stdenv.hostPlatform.system}.disko
-  ]
-  ++ (with pkgs; [
+
+  environment.systemPackages = with pkgs; [
     git
     helix
     nurl
@@ -56,5 +64,6 @@
     unzip
     zip
     nixfmt
-  ]);
+    inputs.disko.packages.${pkgs.stdenv.hostPlatform.system}.disko
+  ];
 }

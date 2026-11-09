@@ -1,13 +1,11 @@
-{ lib, ... }:
+# nixos users setup on host
+{ homelab, ... }:
 {
-  # All normal users on Ash can manage its shared media.
-  options.users.users = lib.mkOption {
-    type = lib.types.attrsOf (
-      lib.types.submodule (
-        { config, ... }: {
-          extraGroups = lib.mkIf config.isNormalUser [ "homelab" ];
-        }
-      )
-    );
-  };
+  imports = [ ../../users/ferret ];
+
+  users.users.ferret.extraGroups = [ homelab.group ];
+
+  users.users.ferret.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGyfwM5xpexbGKqVwGGOUvsIUjafEAmkFR3mgyMNRoLe ferret@ember"
+  ];
 }

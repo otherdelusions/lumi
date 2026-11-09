@@ -17,6 +17,11 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
 
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -40,11 +45,6 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
-
-    copyparty = {
-      url = "github:9001/copyparty";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -52,13 +52,17 @@
     let
       forAllSystems =
         f: nixpkgs.lib.genAttrs [ "x86_64-linux" ] (system: f nixpkgs.legacyPackages.${system});
+
+      treefmtEval = forAllSystems (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
+
       mkHost =
         name:
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs self; };
           modules = [
-            ./modules/common
+            { networking.hostName = name; }
+            ./hosts/common
             (./hosts + "/${name}")
           ];
         };
@@ -69,63 +73,28 @@
         ember = mkHost "ember";
         interloper = mkHost "interloper";
       };
-      nixosModules = {
-        monbooru = import ./modules/monbooru.nix;
-        zapret = import ./modules/zapret.nix;
-        librewolf = import ./modules/librewolf.nix;
-      };
+
+      homeManagerModules.dux-shell = ./modules/home/dux-shell.nix;
+
+      nixosModules = nixpkgs.lib.genAttrs [
+        "monbooru"
+        "zapret"
+        "librewolf"
+      ] (name: ./modules/nixos + "/${name}.nix");
+
       packages = forAllSystems (pkgs: {
         monbooru = pkgs.callPackage ./packages/monbooru.nix { };
         morewaita-accent-icon-theme = pkgs.callPackage ./packages/morewaita-accent-icon-theme.nix { };
       });
+
       formatter = forAllSystems (
-        pkgs:
-        pkgs.nixfmt-tree.override {
-          runtimeInputs = [ pkgs.yamlfmt ];
-          settings.formatter.yamlfmt = {
-            command = "yamlfmt";
-            includes = [
-              "*.yaml"
-              "*.yml"
-            ];
-          };
-        }
+        pkgs: treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper
       );
+
       checks = forAllSystems (pkgs: {
-        formatting =
-          pkgs.runCommand "check-formatting"
-            {
-              nativeBuildInputs = with pkgs; [
-                nixfmt
-                deadnix
-                statix
-                yamlfmt
-                actionlint
-                markdownlint-cli
-              ];
-            }
-            ''
-              cd ${self}
-
-              echo "Running nixfmt..."
-              find . -type f -name '*.nix' -exec nixfmt --check {} +
-
-              echo "Running deadnix..."
-              deadnix --fail
-
-              echo "Running statix..."
-              statix check .
-
-              echo "Running yamlfmt & actionlint..."
-              find . -type f \( -name '*.yaml' -o -name '*.yml' \) -exec yamlfmt -lint {} +
-              find .github/workflows -type f \( -name '*.yaml' -o -name '*.yml' \) -exec actionlint {} +
-
-              echo "Running markdownlint..."
-              markdownlint --dot --disable MD013 MD033 -- .
-
-              touch "$out" # success
-            '';
+        formatting = treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.check self;
       });
+
       devShells = forAllSystems (pkgs: {
         default = pkgs.mkShell {
           name = "lumi";
