@@ -1,7 +1,10 @@
 {
   imports = [
     ./base.nix
+    ./forgejo.nix
+    ./navidrome.nix
     ./opencloud.nix
+    ./suwayomi.nix
   ];
 
   services.avahi = {

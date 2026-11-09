@@ -5,6 +5,7 @@
   ...
 }:
 let
+  port = 4905;
   cfg = config.services.suwayomi-server;
   mediaDirs = [
     cfg.settings.server.localSourcePath
@@ -12,6 +13,11 @@ let
   ];
 in
 {
+  security.nix-secrets.secrets."services/suwayomi/ferret_pass" = {
+    recipients = [ "ash" ];
+    owner = cfg.user;
+  };
+
   services.suwayomi-server = {
     enable = true;
     openFirewall = true;
@@ -19,12 +25,14 @@ in
     dataDir = "${homelab.dirs.data}/services/suwayomi";
 
     settings.server = {
-      port = 8080;
+      inherit port;
       systemTrayEnabled = false;
       initialOpenInBrowserEnabled = false;
       backupInterval = 0;
       globalUpdateInterval = 0;
-      authMode = "NONE";
+      basicAuthEnabled = true;
+      basicAuthUsername = "ferret";
+      basicAuthPasswordFile = config.security.nix-secrets.secrets."services/suwayomi/ferret_pass".path;
       opdsEnablePageReadProgress = false;
       downloadsPath = "${homelab.dirs.content}/manga/downloads";
       localSourcePath = "${homelab.dirs.content}/manga/local";

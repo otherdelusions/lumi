@@ -5,6 +5,7 @@
   ...
 }:
 let
+  port = 4904;
   cfg = config.services.navidrome;
 in
 {
@@ -17,6 +18,7 @@ in
       DataFolder = "${homelab.dirs.data}/services/navidrome";
       MusicFolder = "${homelab.dirs.content}/music";
       Address = homelab.address;
+      Port = port;
       DefaultDownsamplingFormat = "aac";
       EnableInsightsCollector = false;
     };

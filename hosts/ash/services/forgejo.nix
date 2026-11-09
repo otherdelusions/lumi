@@ -5,6 +5,7 @@
   ...
 }:
 let
+  port = 4902;
   cfg = config.services.forgejo;
 in
 {
@@ -17,7 +18,7 @@ in
       server = {
         DOMAIN = homelab.baseDomain;
         HTTP_ADDR = homelab.address;
-        HTTP_PORT = 3000;
+        HTTP_PORT = port;
         SSH_PORT = lib.head config.services.openssh.ports;
       };
       service.DISABLE_REGISTRATION = true;

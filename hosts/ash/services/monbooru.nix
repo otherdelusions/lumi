@@ -6,7 +6,7 @@
   ...
 }:
 let
-  port = 8455;
+  port = 4903;
 in
 {
   imports = [ self.nixosModules.monbooru ];
