@@ -100,6 +100,14 @@
           "toggle"
         ];
       };
+      "XF86Search" = {
+        _props.repeat = false;
+        spawn = dmsIpc ++ [
+          "keybinds"
+          "toggle"
+          "niri"
+        ];
+      };
       "Super+L".spawn = dmsIpc ++ [
         "lock"
         "lock"
