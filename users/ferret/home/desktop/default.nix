@@ -5,6 +5,7 @@
     ./librewolf
     ./niri
     ./dux-shell
+    ./mpv.nix
   ];
 
   gtk.enable = true;

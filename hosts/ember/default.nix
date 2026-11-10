@@ -19,7 +19,6 @@
     papers
     unzip
     zip
-    (mpv.override { scripts = with mpvScripts; [ thumbfast ]; })
     bubblewrap
     mcp-nixos
   ];

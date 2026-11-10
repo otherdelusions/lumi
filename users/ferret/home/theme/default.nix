@@ -8,5 +8,6 @@
     ./librewolf.nix
     ./niri.nix
     ./dux-shell.nix
+    ./mpv.nix
   ];
 }
