@@ -7,7 +7,7 @@
 {
   imports = [
     ./dux-shell.nix
-    ./librewolf
+    ./helium
   ];
 
   programs = {

@@ -34,14 +34,11 @@ in
       withHashtag = lib.mapAttrs (_: value: "#${value}") colors;
       withRgb = lib.mapAttrs (
         _: color:
-        let
-          channel = start: lib.fromHexString (builtins.substring start 2 color);
-        in
-        {
-          r = channel 0;
-          g = channel 2;
-          b = channel 4;
-        }
+        map (start: lib.fromHexString (builtins.substring start 2 color)) [
+          0
+          2
+          4
+        ]
       ) colors;
     };
 

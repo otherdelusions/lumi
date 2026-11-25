@@ -5,7 +5,7 @@
     ./foot.nix
     ./fonts.nix
     ./gtk.nix
-    ./librewolf.nix
+    ./helium.nix
     ./niri.nix
     ./dux-shell.nix
     ./mpv.nix

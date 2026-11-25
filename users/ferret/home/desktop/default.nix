@@ -2,7 +2,7 @@
   imports = [
     ./foot.nix
     ./user-dirs.nix
-    ./librewolf
+    ./helium
     ./niri
     ./dux-shell
     ./mpv.nix

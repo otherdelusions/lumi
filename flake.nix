@@ -39,11 +39,9 @@
 
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix/3861e2249cb244bfbc7cfab2303c152cf5f9d9e9";
 
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
+    helium = {
+      url = "github:amaanq/helium-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -74,12 +72,16 @@
         interloper = mkHost "interloper";
       };
 
-      homeManagerModules.dux-shell = ./modules/home/dux-shell.nix;
+      homeManagerModules = nixpkgs.lib.genAttrs [
+        "dux-shell"
+        "helium"
+      ] (name: ./modules/home + "/${name}.nix");
 
       nixosModules = nixpkgs.lib.genAttrs [
         "monbooru"
         "zapret"
         "librewolf"
+        "helium"
       ] (name: ./modules/nixos + "/${name}.nix");
 
       packages = forAllSystems (pkgs: {
