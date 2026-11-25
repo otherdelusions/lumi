@@ -37,7 +37,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    apple-fonts.url = "github:Lyndeno/apple-fonts.nix/3861e2249cb244bfbc7cfab2303c152cf5f9d9e9";
+    apple-fonts.url = "github:Lyndeno/apple-fonts.nix/58b7ab5a049c57c4f38f27eac84f45e2903bb687";
 
     helium = {
       url = "github:amaanq/helium-flake";
