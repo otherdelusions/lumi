@@ -32,7 +32,7 @@
         l = "log --oneline --graph";
         changes = "diff --stat --patch HEAD";
         cm = "commit -m";
-        lock = "!git restore --staged . && git add flake.lock && git chore flake \"update flake.lock\"";
+        lock = "commit --only -m 'chore(flake): update flake.lock' -- ':(top)flake.lock'";
         chore = "!f() { git commit -m \"chore\${1:+($1)}: $2\" \${3:+-m \"$3\"}; }; f";
         docs = "!f() { git commit -m \"docs\${1:+($1)}: $2\" \${3:+-m \"$3\"}; }; f";
         feat = "!f() { git commit -m \"feat\${1:+($1)}: $2\" \${3:+-m \"$3\"}; }; f";
