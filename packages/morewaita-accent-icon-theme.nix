@@ -8,6 +8,18 @@
   accentColor ? "",
 }:
 let
+  morewaita = morewaita-icon-theme.overrideAttrs (
+    finalAttrs: _: {
+      version = "50.1";
+      src = fetchFromGitHub {
+        owner = "somepaulo";
+        repo = "MoreWaita";
+        tag = "v${finalAttrs.version}";
+        hash = "sha256-TKy7NJt+r4MX2qq0F4aqpfh3levf7r6q9+2/2ZsWSBk=";
+      };
+    }
+  );
+
   variant = if accentColor == "" then "blue" else "accent";
   accent = lib.removePrefix "#" accentColor;
 
@@ -21,20 +33,20 @@ let
 in
 stdenv.mkDerivation {
   pname = "morewaita-accent-icon-theme";
-  version = "367849d";
+  version = "2.6";
 
   src = fetchFromGitHub {
     owner = "dpejoh";
     repo = "Adwaita-colors";
-    rev = "367849dcdd269f9be17b143763eb7279087ab88c";
-    hash = "sha256-R71ZRoDdlWJy+TkWkmXwyRWJTAYi4QOSmnO6GiOfGCM=";
+    rev = "7d838af258da4ca05040760301d05140aa858145";
+    hash = "sha256-EncnmE5Ck7QnebyU5zW4L5yV9wIW2yLr4lB1FgqG+0A=";
   };
 
   nativeBuildInputs = [
     gtk3
   ];
   propagatedBuildInputs = [
-    morewaita-icon-theme
+    morewaita
     adwaita-icon-theme
   ];
 
