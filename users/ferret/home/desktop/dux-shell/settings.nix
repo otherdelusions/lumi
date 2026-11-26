@@ -24,6 +24,7 @@
     dankLauncherV2Size = "medium";
     dankLauncherV2ShowFooter = false;
     audioVisualizerEnabled = false;
+    density = "dense";
     dashCards = [
       {
         id = "clock";
